@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Babel</string>
+    <string name="main_menu_log_in">Log In</string>
+    <string name="github_oauth_activity_label">GitHub</string>
+    <string name="error_message">An error has occurred. Please try this again later.</string>
 </resources>
