@@ -3,11 +3,13 @@ package com.ruenzuo.babel.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
 
 import com.ruenzuo.babel.R;
+import com.ruenzuo.babel.helpers.SecureStorageHelper;
 
 import butterknife.InjectView;
 
@@ -15,10 +17,12 @@ import butterknife.InjectView;
 public class MenuActivity extends Activity {
 
     private static final int AUTHORISATION_REQUEST_CODE = 1;
+    private SecureStorageHelper secureStorageHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        secureStorageHelper = new SecureStorageHelper(getApplicationContext());
         setContentView(R.layout.menu_activity_layout);
     }
 
@@ -42,9 +46,8 @@ public class MenuActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == AUTHORISATION_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-
-            } else {
-                
+                String token = data.getStringExtra("token");
+                secureStorageHelper.store(token);
             }
         }
     }

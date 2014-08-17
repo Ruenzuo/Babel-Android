@@ -1,1 +1,1 @@
-include ':app'
+include ':app', ':External:secure-preferences:library'
