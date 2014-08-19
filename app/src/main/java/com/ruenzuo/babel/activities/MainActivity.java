@@ -3,27 +3,33 @@ package com.ruenzuo.babel.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.webkit.WebView;
 
 import com.ruenzuo.babel.R;
+import com.ruenzuo.babel.helpers.AuthorisationHelper;
 import com.ruenzuo.babel.helpers.SecureStorageHelper;
+import com.squareup.okhttp.Authenticator;
+import com.squareup.okhttp.Credentials;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
-import butterknife.InjectView;
+import java.io.IOException;
+import java.net.Proxy;
 
 
-public class MenuActivity extends Activity {
+public class MainActivity extends Activity {
 
     private static final int AUTHORISATION_REQUEST_CODE = 1;
     private SecureStorageHelper secureStorageHelper;
+    private AuthorisationHelper authorisationHelper = new AuthorisationHelper();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        secureStorageHelper = new SecureStorageHelper(getApplicationContext());
-        setContentView(R.layout.menu_activity_layout);
+        setContentView(R.layout.main_activity_layout);
+        checkTokenValidity();
     }
 
     @Override
@@ -51,4 +57,13 @@ public class MenuActivity extends Activity {
             }
         }
     }
+
+    private void checkTokenValidity() {
+        secureStorageHelper = new SecureStorageHelper(getApplicationContext());
+        String token = secureStorageHelper.retrieveToken();
+        if (!token.equalsIgnoreCase(SecureStorageHelper.NO_KEY_FOUND)) {
+            authorisationHelper.checkTokenValidity(token);
+        }
+    }
+
 }
