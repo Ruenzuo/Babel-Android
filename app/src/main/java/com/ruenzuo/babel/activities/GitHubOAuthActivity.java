@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.ruenzuo.babel.R;
 import com.ruenzuo.babel.extensions.AnimatedActivity;
+import com.ruenzuo.babel.helpers.ErrorNotificationHelper;
 import com.ruenzuo.babel.helpers.TranslatorHelper;
 import com.ruenzuo.babel.helpers.URLHelper;
 import com.squareup.okhttp.OkHttpClient;
@@ -74,7 +75,7 @@ public class GitHubOAuthActivity extends AnimatedActivity {
                     if (code != null) {
                         getAccessToken(code);
                     } else {
-                        Toast.makeText(GitHubOAuthActivity.this, getString(R.string.error_message), Toast.LENGTH_LONG).show();
+                        ErrorNotificationHelper.notifyError(GitHubOAuthActivity.this);
                     }
                     return true;
                 }
@@ -83,19 +84,19 @@ public class GitHubOAuthActivity extends AnimatedActivity {
 
         };
         webView.setWebViewClient(webViewClient);
-        webView.loadUrl(URLHelper.getURLForAuthorization());
+        webView.loadUrl(URLHelper.getURLStringForAuthorization());
     }
 
     public void getAccessToken(final String code) {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
         progressDialog.show();
-        progressDialog.setMessage("Retrieving access token");
+        progressDialog.setMessage("Retrieving access token.");
         Task.callInBackground(new Callable<String>() {
             @Override
             public String call() throws Exception {
                 Request request = new Request.Builder()
-                        .url(URLHelper.getURLForAccessToken(code))
+                        .url(URLHelper.getURLStringForAccessToken(code))
                         .build();
                 Response response = httpClient.newCall(request).execute();
                 return response.body().string();
@@ -114,7 +115,7 @@ public class GitHubOAuthActivity extends AnimatedActivity {
                         return null;
                     }
                 }
-                Toast.makeText(GitHubOAuthActivity.this, getString(R.string.error_message), Toast.LENGTH_LONG).show();
+                ErrorNotificationHelper.notifyError(GitHubOAuthActivity.this);
                 return null;
             }
         }, Task.UI_THREAD_EXECUTOR).continueWith(new Continuation<Void, Void>() {

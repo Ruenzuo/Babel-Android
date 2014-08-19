@@ -25,4 +25,8 @@ public class SecureStorageHelper {
         return securePreferences.getString(TOKEN_KEY, NO_KEY_FOUND);
     }
 
+    public boolean deleteToken() {
+        return securePreferences.edit().remove(TOKEN_KEY).commit();
+    }
+
 }
