@@ -8,8 +8,7 @@ import java.util.Map;
  */
 public class TranslatorHelper {
 
-    public static Map<String, String> translateToMap(String query)
-    {
+    public static Map<String, String> translateToMap(String query) {
         String[] params = query.split("&");
         Map<String, String> map = new HashMap<String, String>();
         for (String param : params) {
