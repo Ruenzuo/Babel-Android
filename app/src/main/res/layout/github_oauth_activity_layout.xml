@@ -8,7 +8,7 @@
         android:id="@+id/webView"
         android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
     <ProgressBar
         android:id="@+id/progressBar"
         android:padding="@dimen/activity_margin"
@@ -16,5 +16,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:indeterminate="true"
-        style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal"/>
+        style="@style/ProgressBarBabel" />
 </RelativeLayout>

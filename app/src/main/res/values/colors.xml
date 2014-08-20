@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="dark_babel_color">#0BD318</color>
+    <color name="light_babel_color">#5AD427</color>
+    <color name="semi_transparent_babel_color">#805AD427</color>
+</resources>

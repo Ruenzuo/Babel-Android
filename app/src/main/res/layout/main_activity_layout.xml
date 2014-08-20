@@ -2,6 +2,12 @@
     xmlns:fbutton="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
+        android:src="@drawable/img_background"
+        android:layout_centerInParent="true"/>
     <info.hoang8f.widget.FButton
         android:id="@+id/btnStart"
         android:visibility="gone"
@@ -12,8 +18,8 @@
         android:text="@string/tap_to_start"
         android:textStyle="bold"
         android:textColor="#FFFFFF"
-        fbutton:buttonColor="#5AD427"
-        fbutton:shadowColor="#0BD318"
+        fbutton:buttonColor="@color/dark_babel_color"
+        fbutton:shadowColor="@color/light_babel_color"
         fbutton:shadowEnabled="true"
         fbutton:shadowHeight="5dp"
         fbutton:cornerRadius="5dp" />
