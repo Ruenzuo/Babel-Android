@@ -69,9 +69,19 @@ public class MainActivity extends Activity {
             if (resultCode == RESULT_OK) {
                 token = data.getStringExtra("token");
                 secureStorageHelper.store(token);
-                invalidateOptionsMenu();
+                showLogOutView();
             }
         }
+    }
+
+    private void showLogInView() {
+        btnStart.setVisibility(View.GONE);
+        invalidateOptionsMenu();
+    }
+
+    private void showLogOutView() {
+        btnStart.setVisibility(View.VISIBLE);
+        invalidateOptionsMenu();
     }
 
     private void checkTokenValidity() {
@@ -93,8 +103,7 @@ public class MainActivity extends Activity {
                             Toast.makeText(MainActivity.this, getString(R.string.session_expired), Toast.LENGTH_LONG).show();
                         } else {
                             MainActivity.this.token = retrievedToken;
-                            btnStart.setVisibility(View.VISIBLE);
-                            invalidateOptionsMenu();
+                            showLogOutView();
                         }
                     }
                     return null;
@@ -120,7 +129,7 @@ public class MainActivity extends Activity {
                     } else {
                         MainActivity.this.token = null;
                         secureStorageHelper.deleteToken();
-                        invalidateOptionsMenu();
+                        showLogInView();
                     }
                 }
                 return null;
