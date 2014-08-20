@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.ruenzuo.babel.R;
@@ -16,9 +17,15 @@ import com.ruenzuo.babel.helpers.SecureStorageHelper;
 
 import bolts.Continuation;
 import bolts.Task;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import info.hoang8f.widget.FButton;
 
 
 public class MainActivity extends Activity {
+
+    @InjectView(R.id.btnStart)
+    FButton btnStart;
 
     private static final int AUTHORISATION_REQUEST_CODE = 1;
     private SecureStorageHelper secureStorageHelper;
@@ -29,6 +36,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity_layout);
+        ButterKnife.inject(this);
         checkTokenValidity();
     }
 
@@ -85,6 +93,7 @@ public class MainActivity extends Activity {
                             Toast.makeText(MainActivity.this, getString(R.string.session_expired), Toast.LENGTH_LONG).show();
                         } else {
                             MainActivity.this.token = retrievedToken;
+                            btnStart.setVisibility(View.VISIBLE);
                             invalidateOptionsMenu();
                         }
                     }
