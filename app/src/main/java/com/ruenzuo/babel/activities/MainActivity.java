@@ -19,6 +19,7 @@ import bolts.Continuation;
 import bolts.Task;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import info.hoang8f.widget.FButton;
 
 
@@ -72,6 +73,12 @@ public class MainActivity extends Activity {
                 showLogOutView();
             }
         }
+    }
+
+    @OnClick(R.id.btnStart)
+    void start() {
+        Intent intent = new Intent(this, BabelActivity.class);
+        startActivity(intent);
     }
 
     private void showLogInView() {
