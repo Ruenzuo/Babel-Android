@@ -22,5 +22,9 @@
             android:screenOrientation="portrait"
             android:label="@string/github_oauth_activity_label"
             android:logo="@drawable/ic_action_back"/>
+        <activity android:name=".activities.BabelActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/app_name"
+            android:logo="@drawable/ic_action_back"/>
     </application>
 </manifest>
