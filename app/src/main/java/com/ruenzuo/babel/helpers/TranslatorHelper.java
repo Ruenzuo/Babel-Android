@@ -1,5 +1,9 @@
 package com.ruenzuo.babel.helpers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.ruenzuo.babel.models.Language;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,6 +11,8 @@ import java.util.Map;
  * Created by renzocrisostomo on 17/08/14.
  */
 public class TranslatorHelper {
+
+    private Gson gson = new GsonBuilder().create();
 
     public static Map<String, String> translateToMap(String query) {
         String[] params = query.split("&");
@@ -23,6 +29,10 @@ public class TranslatorHelper {
             map.put(name, value);
         }
         return map;
+    }
+
+    public Language[] translateLanguages(String file) {
+        return gson.fromJson(file, Language[].class);
     }
 
 }

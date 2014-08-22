@@ -1,0 +1,224 @@
+[
+    {
+        "index": 0,
+        "name": "ActionScript",
+        "search": "ActionScript",
+        "css": "actionscript"
+    },
+    {
+        "index": 1,
+        "name": "AppleScript",
+        "search": "AppleScript",
+        "css": "applescript"
+    },
+    {
+        "index": 2,
+        "name": "AutoHotkey",
+        "search": "AutoHotkey",
+        "css": "autohotkey"
+    },
+    {
+        "index": 3,
+        "name": "C#",
+        "search": "C%23",
+        "css": "cs"
+    },
+    {
+        "index": 4,
+        "name": "C++",
+        "search": "C%2B%2B",
+        "css": "cpp"
+    },
+    {
+        "index": 5,
+        "name": "Clojure",
+        "search": "Clojure",
+        "css": "clojure"
+    },
+    {
+        "index": 6,
+        "name": "CoffeeScript",
+        "search": "CoffeeScript",
+        "css": "coffeescript"
+    },
+    {
+        "index": 7,
+        "name": "CSS",
+        "search": "CSS",
+        "css": "css"
+    },
+    {
+        "index": 8,
+        "name": "D",
+        "search": "D",
+        "css": "d"
+    },
+    {
+        "index": 9,
+        "name": "Elixir",
+        "search": "Elixir",
+        "css": "elixir"
+    },
+    {
+        "index": 10,
+        "name": "Erlang",
+        "search": "Erlang",
+        "css": "erlang"
+    },
+    {
+        "index": 11,
+        "name": "Go",
+        "search": "Go",
+        "css": "go"
+    },
+    {
+        "index": 12,
+        "name": "Haskell",
+        "search": "Haskell",
+        "css": "haskell"
+    },
+    {
+        "index": 13,
+        "name": "Haxe",
+        "search": "Haxe",
+        "css": "haxe"
+    },
+    {
+        "index": 14,
+        "name": "Java",
+        "search": "Java",
+        "css": "java"
+    },
+    {
+        "index": 15,
+        "name": "JavaScript",
+        "search": "JavaScript",
+        "css": "javascript"
+    },
+    {
+        "index": 16,
+        "name": "Lisp",
+        "search": "Common+Lisp",
+        "css": "lisp"
+    },
+    {
+        "index": 17,
+        "name": "Lua",
+        "search": "Lua",
+        "css": "lua"
+    },
+    {
+        "index": 18,
+        "name": "MATLAB",
+        "search": "Matlab",
+        "css": "matlab"
+    },
+    {
+        "index": 19,
+        "name": "Nimrod",
+        "search": "Nimrod",
+        "css": "nimrod"
+    },
+    {
+        "index": 20,
+        "name": "Objective-C",
+        "search": "Objective-C",
+        "css": "objectivec"
+    },
+    {
+        "index": 21,
+        "name": "OCaml",
+        "search": "OCaml",
+        "css": "ocaml"
+    },
+    {
+        "index": 22,
+        "name": "Oxygene",
+        "search": "Oxygene",
+        "css": "oxygene"
+    },
+    {
+        "index": 23,
+        "name": "Perl",
+        "search": "Perl",
+        "css": "perl"
+    },
+    {
+        "index": 24,
+        "name": "PHP",
+        "search": "PHP",
+        "css": "php"
+    },
+    {
+        "index": 25,
+        "name": "Python",
+        "search": "Python",
+        "css": "python"
+    },
+    {
+        "index": 26,
+        "name": "R",
+        "search": "R",
+        "css": "r"
+    },
+    {
+        "index": 27,
+        "name": "Ruby",
+        "search": "Ruby",
+        "css": "ruby"
+    },
+    {
+        "index": 28,
+        "name": "Rust",
+        "search": "Rust",
+        "css": "rust"
+    },
+    {
+        "index": 29,
+        "name": "Scala",
+        "search": "Scala",
+        "css": "scala"
+    },
+    {
+        "index": 30,
+        "name": "Shell",
+        "search": "Shell",
+        "css": "bash"
+    },
+    {
+        "index": 31,
+        "name": "Smalltalk",
+        "search": "Smalltalk",
+        "css": "smalltalk"
+    },
+    {
+        "index": 32,
+        "name": "SQL",
+        "search": "SQL",
+        "css": "sql"
+    },
+    {
+        "index": 33,
+        "name": "Swift",
+        "search": "Swift",
+        "css": "swift"
+    },
+    {
+        "index": 34,
+        "name": "TeX",
+        "search": "TeX",
+        "css": "tex"
+    },
+    {
+        "index": 35,
+        "name": "TypeScript",
+        "search": "TypeScript",
+        "css": "typescript"
+    },
+    {
+        "index": 36,
+        "name": "Vala",
+        "search": "Vala",
+        "css": "vala"
+    }
+]
