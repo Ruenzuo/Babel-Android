@@ -8,7 +8,9 @@ import android.support.v4.view.ViewPager;
 import com.ruenzuo.babel.R;
 import com.ruenzuo.babel.adapters.BabelFragmentPagerAdapter;
 import com.ruenzuo.babel.extensions.AnimatedActivity;
+import com.ruenzuo.babel.managers.BabelManager;
 import com.ruenzuo.babel.models.enums.BabelFragmentType;
+import com.ruenzuo.babel.models.enums.DifficultyType;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -20,6 +22,8 @@ public class BabelActivity extends AnimatedActivity {
 
     @InjectView(R.id.vwPager)
     ViewPager vwPager;
+
+    private BabelManager babelManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +53,14 @@ public class BabelActivity extends AnimatedActivity {
         for (BabelFragmentType type : BabelFragmentType.values()) {
             getActionBar().addTab(getActionBar().newTab().setText(type.toPrint()).setTabListener(tabListener));
         }
+        String token = getIntent().getStringExtra("Token");
+        DifficultyType difficultyType = (DifficultyType) getIntent().getSerializableExtra("DifficultyType");
+        setupManager(difficultyType, token);
+    }
+
+    private void setupManager(DifficultyType difficultyType, String token) {
+        babelManager = new BabelManager(difficultyType, token);
+        babelManager.setupQueue(this);
     }
 
     private ActionBar.TabListener tabListener = new ActionBar.TabListener() {
