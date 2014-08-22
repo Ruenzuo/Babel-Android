@@ -1,9 +1,9 @@
 package com.ruenzuo.babel.activities;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,9 +11,12 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.ruenzuo.babel.R;
+import com.ruenzuo.babel.definitions.OnDifficultyDialogFragmentListener;
+import com.ruenzuo.babel.fragments.DifficultyDialogFragment;
 import com.ruenzuo.babel.helpers.AuthorisationHelper;
 import com.ruenzuo.babel.helpers.ErrorNotificationHelper;
 import com.ruenzuo.babel.helpers.SecureStorageHelper;
+import com.ruenzuo.babel.models.enums.DifficultyType;
 
 import bolts.Continuation;
 import bolts.Task;
@@ -23,7 +26,7 @@ import butterknife.OnClick;
 import info.hoang8f.widget.FButton;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity implements OnDifficultyDialogFragmentListener {
 
     @InjectView(R.id.btnStart)
     FButton btnStart;
@@ -77,8 +80,8 @@ public class MainActivity extends Activity {
 
     @OnClick(R.id.btnStart)
     void start() {
-        Intent intent = new Intent(this, BabelActivity.class);
-        startActivity(intent);
+        DifficultyDialogFragment dialogFragment = new DifficultyDialogFragment();
+        dialogFragment.show(getSupportFragmentManager(), "DifficultyDialogFragment");
     }
 
     private void showLogInView() {
@@ -142,6 +145,11 @@ public class MainActivity extends Activity {
                 return null;
             }
         }, Task.UI_THREAD_EXECUTOR);
+    }
+
+    @Override
+    public void onDifficultySelected(DifficultyType difficultyType) {
+
     }
 
 }
