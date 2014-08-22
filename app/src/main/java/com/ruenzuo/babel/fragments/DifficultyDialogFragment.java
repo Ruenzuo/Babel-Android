@@ -32,17 +32,13 @@ public class DifficultyDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setSingleChoiceItems(DifficultyType.difficultyTypes(), -1, new DialogInterface.OnClickListener() {
+        builder.setItems(DifficultyType.difficultyTypes(), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 difficultyType = DifficultyType.values()[which];
-            }
-        }).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
                 listener.onDifficultySelected(difficultyType);
             }
-        }).setNegativeButton(android.R.string.cancel, null);
+        });
         return builder.create();
     }
 

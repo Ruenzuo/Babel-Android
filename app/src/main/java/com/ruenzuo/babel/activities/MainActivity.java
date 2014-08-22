@@ -149,7 +149,10 @@ public class MainActivity extends FragmentActivity implements OnDifficultyDialog
 
     @Override
     public void onDifficultySelected(DifficultyType difficultyType) {
-
+        Intent intent = new Intent(this, BabelActivity.class);
+        intent.putExtra("DifficultyType", difficultyType);
+        intent.putExtra("Token", token);
+        startActivity(intent);
     }
 
 }
