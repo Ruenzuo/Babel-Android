@@ -1,9 +1,11 @@
 package com.ruenzuo.babel.models.enums;
 
+import java.io.Serializable;
+
 /**
  * Created by renzocrisostomo on 21/08/14.
  */
-public enum DifficultyType {
+public enum DifficultyType implements Serializable {
 
     DIFFICULTY_TYPE_EASY ("Easy"), DIFFICULTY_TYPE_NORMAL ("Normal"), DIFFICULTY_TYPE_HARD ("Hard");
 
@@ -21,7 +23,7 @@ public enum DifficultyType {
         int length = DifficultyType.values().length;
         CharSequence[] typesPrint = new CharSequence[length];
         for (int i = 0; i < length; i++) {
-            typesPrint[i] = DifficultyType.values()[i].toString();
+            typesPrint[i] = DifficultyType.values()[i].toPrint();
         }
         return typesPrint;
     }
