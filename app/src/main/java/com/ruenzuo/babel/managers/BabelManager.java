@@ -29,11 +29,10 @@ public class BabelManager {
     }
 
     private void setupLanguages(Context context) {
-        InputStream inputStream;
         String file = "";
         try {
             StringBuilder stringBuilder = new StringBuilder("info-");
-            inputStream = context.getAssets()
+            InputStream inputStream = context.getAssets()
                     .open(stringBuilder.append(difficultyType.toPrint().toLowerCase())
                             .append(".json")
                             .toString());
