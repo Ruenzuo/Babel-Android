@@ -2,7 +2,6 @@
     <style name="AppTheme" parent="Theme.Babel">
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:actionBarStyle">@style/ActionBar.Transparent.Babel.App</item>
         <item name="android:actionMenuTextColor">@color/light_babel_color</item>
         <item name="android:actionBarItemBackground">@drawable/action_button_background</item>
         <item name="android:textColorHighlight">#990bd318</item>
@@ -10,12 +9,6 @@
         <item name="android:textSelectHandleRight">@drawable/babel_text_select_handle_right</item>
         <item name="android:textSelectHandle">@drawable/babel_text_select_handle_middle</item>
         <item name="android:progressBarStyleHorizontal">@style/ProgressBarBabel</item>
-    </style>
-    <style name="ActionBar.Transparent.Babel.App" parent="@style/ActionBar.Transparent.Babel">
-        <item name="android:titleTextStyle">@style/ActionBarTitleTextBabel</item>
-    </style>
-    <style name="ActionBarTitleTextBabel" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
-        <item name="android:textColor">@color/dark_babel_color</item>
     </style>
     <style name="ProgressBarBabel" parent="android:Widget.Holo.Light.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/babel_progress_horizontal_holo_light</item>

@@ -1,9 +1,9 @@
 package com.ruenzuo.babel.activities;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,7 +26,7 @@ import butterknife.OnClick;
 import info.hoang8f.widget.FButton;
 
 
-public class MainActivity extends FragmentActivity implements OnDifficultyDialogFragmentListener {
+public class MainActivity extends Activity implements OnDifficultyDialogFragmentListener {
 
     @InjectView(R.id.btnStart)
     FButton btnStart;
@@ -81,7 +81,7 @@ public class MainActivity extends FragmentActivity implements OnDifficultyDialog
     @OnClick(R.id.btnStart)
     void start() {
         DifficultyDialogFragment dialogFragment = new DifficultyDialogFragment();
-        dialogFragment.show(getSupportFragmentManager(), "DifficultyDialogFragment");
+        dialogFragment.show(getFragmentManager(), "DifficultyDialogFragment");
     }
 
     private void showLogInView() {
