@@ -2,6 +2,8 @@ package com.ruenzuo.babel.activities;
 
 import android.app.ActionBar;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.SpinnerAdapter;
 
 import com.ruenzuo.babel.R;
@@ -19,6 +21,9 @@ import com.ruenzuo.babel.models.enums.DifficultyType;
 public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavigationListener {
 
     private BabelManager babelManager;
+    private BabelFragmentType currentBabelFragmentType;
+    private int remainingHints = 5;
+    private int remainingSkips = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +43,33 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
         babelManager.setupQueue(this);
     }
 
+    private String getHintTitle() {
+        return getString(R.string.hint) + " (" + remainingHints + ")";
+    }
+
+    private String getSkipTitle() {
+        return getString(R.string.skip) + " (" + remainingSkips + ")";
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        switch (currentBabelFragmentType) {
+            case BABEL_FRAGMENT_TYPE_SOURCE_CODE: {
+                menu.add(Menu.NONE, R.id.action_skip, Menu.NONE, getSkipTitle()).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                return true;
+            }
+            case BABEL_FRAGMENT_TYPE_GUESS_OPTIONS: {
+                menu.add(Menu.NONE, R.id.action_hint, Menu.NONE, getHintTitle()).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                return true;
+            }
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
     @Override
     public boolean onNavigationItemSelected(int i, long l) {
-        BabelFragmentType babelFragmentType = BabelFragmentType.values()[i];
-        switch (babelFragmentType) {
+        currentBabelFragmentType = BabelFragmentType.values()[i];
+        switch (currentBabelFragmentType) {
             case BABEL_FRAGMENT_TYPE_SOURCE_CODE: {
                 getFragmentManager().beginTransaction().replace(R.id.vwFrame, new SourceCodeFragment()).commit();
                 break;
@@ -51,6 +79,7 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
                 break;
             }
         }
+        invalidateOptionsMenu();
         return true;
     }
 
