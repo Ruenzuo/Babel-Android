@@ -75,7 +75,7 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
                 break;
             }
             case BABEL_FRAGMENT_TYPE_GUESS_OPTIONS: {
-                getFragmentManager().beginTransaction().replace(R.id.vwFrame, new GuessOptionsFragment()).commit();
+                getFragmentManager().beginTransaction().replace(R.id.vwFrame, GuessOptionsFragment.newInstance(babelManager.getLanguages())).commit();
                 break;
             }
         }

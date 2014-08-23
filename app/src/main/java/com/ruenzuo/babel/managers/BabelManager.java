@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by renzocrisostomo on 17/08/14.
@@ -20,12 +19,16 @@ public class BabelManager {
 
     private DifficultyType difficultyType;
     private String token;
-    private List<Language> languages;
+    private ArrayList<Language> languages;
     private TranslatorHelper translatorHelper = new TranslatorHelper();
 
     public BabelManager(DifficultyType difficultyType, String token) {
         this.difficultyType = difficultyType;
         this.token = token;
+    }
+
+    public ArrayList<Language> getLanguages() {
+        return languages;
     }
 
     private void setupLanguages(Context context) {
