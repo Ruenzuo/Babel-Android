@@ -1,7 +1,7 @@
 package com.ruenzuo.babel.extensions;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.MenuItem;
 
 import com.ruenzuo.babel.R;
@@ -9,7 +9,7 @@ import com.ruenzuo.babel.R;
 /**
  * Created by renzocrisostomo on 17/08/14.
  */
-public class AnimatedActivity extends FragmentActivity {
+public class AnimatedActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

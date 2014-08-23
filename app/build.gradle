@@ -24,7 +24,6 @@ dependencies {
     compile 'fr.avianey:bolts-android-api:1.1.0'
     compile 'com.squareup.okhttp:okhttp:2.0.0'
     compile 'info.hoang8f:fbutton:1.0.5'
-    compile 'com.android.support:support-v4:19.1.0'
     compile 'com.google.code.gson:gson:2.3'
     compile project(':External:secure-preferences:library')
 }

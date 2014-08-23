@@ -17,5 +17,13 @@ public enum BabelFragmentType {
         return print;
     }
 
+    public static CharSequence[] babelFragmentTypes() {
+        int length = BabelFragmentType.values().length;
+        CharSequence[] typesPrint = new CharSequence[length];
+        for (int i = 0; i < length; i++) {
+            typesPrint[i] = BabelFragmentType.values()[i].toPrint();
+        }
+        return typesPrint;
+    }
 
 }
