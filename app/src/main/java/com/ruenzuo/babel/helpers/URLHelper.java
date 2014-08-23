@@ -5,6 +5,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
 import com.ruenzuo.babel.R;
+import com.ruenzuo.babel.models.Language;
+import com.ruenzuo.babel.models.Repository;
 
 /**
  * Created by renzocrisostomo on 17/08/14.
@@ -31,6 +33,10 @@ public class URLHelper {
 
     public static String getURLStringForRepositories(String query) {
         return GITHUB_API_BASE_URL + "search/repositories?" + query;
+    }
+
+    public static String getURLStringForFiles(Language language, Repository repository, String token) {
+        return GITHUB_API_BASE_URL + "search/code?q=language:" + language.getSearch() + "+repo:" + repository.getName() + "&token=" + token;
     }
 
     public static String getUserAgent(Context context) {

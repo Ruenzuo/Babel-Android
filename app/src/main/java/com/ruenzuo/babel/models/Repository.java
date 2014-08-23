@@ -10,4 +10,8 @@ public class Repository {
     @SerializedName("full_name")
     private String name;
 
+    public String getName() {
+        return name;
+    }
+
 }
