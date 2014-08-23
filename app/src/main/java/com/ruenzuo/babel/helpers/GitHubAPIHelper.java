@@ -2,6 +2,7 @@ package com.ruenzuo.babel.helpers;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.ruenzuo.babel.models.File;
 import com.ruenzuo.babel.models.Language;
 import com.ruenzuo.babel.models.Repository;
 import com.squareup.okhttp.OkHttpClient;
@@ -72,6 +73,21 @@ public class GitHubAPIHelper {
             public JsonObject call() throws Exception {
                 Request request = new Request.Builder()
                         .url(URLHelper.getURLStringForFiles(language, repository, token))
+                        .header("User-Agent", userAgent)
+                        .get()
+                        .build();
+                Response response = httpClient.newCall(request).execute();
+                return jsonParser.parse(response.body().string()).getAsJsonObject();
+            }
+        });
+    }
+
+    public Task<JsonObject> getBlob(final Repository repository, final File file) {
+        return Task.callInBackground(new Callable<JsonObject>() {
+            @Override
+            public JsonObject call() throws Exception {
+                Request request = new Request.Builder()
+                        .url(URLHelper.getURLStringForBlob(repository, file))
                         .header("User-Agent", userAgent)
                         .get()
                         .build();
