@@ -1,16 +1,24 @@
 package com.ruenzuo.babel.managers;
 
 import android.content.Context;
-import android.util.Log;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.ruenzuo.babel.helpers.GitHubAPIHelper;
 import com.ruenzuo.babel.helpers.TranslatorHelper;
+import com.ruenzuo.babel.helpers.URLHelper;
 import com.ruenzuo.babel.models.Language;
+import com.ruenzuo.babel.models.Repository;
 import com.ruenzuo.babel.models.enums.DifficultyType;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
+
+import bolts.Continuation;
+import bolts.Task;
 
 /**
  * Created by renzocrisostomo on 17/08/14.
@@ -21,10 +29,13 @@ public class BabelManager {
     private String token;
     private ArrayList<Language> languages;
     private TranslatorHelper translatorHelper = new TranslatorHelper();
+    private GitHubAPIHelper gitHubAPIHelper;
+    private Random random = new Random();
 
-    public BabelManager(DifficultyType difficultyType, String token) {
+    public BabelManager(DifficultyType difficultyType, String token, Context context) {
         this.difficultyType = difficultyType;
         this.token = token;
+        gitHubAPIHelper = new GitHubAPIHelper(URLHelper.getUserAgent(context));
     }
 
     public ArrayList<Language> getLanguages() {
@@ -53,7 +64,23 @@ public class BabelManager {
 
     public void setupQueue(Context context) {
         setupLanguages(context);
-        Log.i("Languages", languages.toString());
+        getRandomRepository(languages.get(0));
     }
+
+    public Task<Repository> getRandomRepository(Language language) {
+        return gitHubAPIHelper.getRepositories(language, token).continueWith(new Continuation<JsonObject, Repository>() {
+            @Override
+            public Repository then(Task<JsonObject> task) throws Exception {
+                if (task.getError() != null) {
+                    throw task.getError();
+                }
+                JsonArray items = task.getResult().getAsJsonArray("items");
+                Repository[] repositories = translatorHelper.translateRepositories(items);
+                return repositories[random.nextInt(5)];
+            }
+        });
+    }
+
+
 
 }

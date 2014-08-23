@@ -28,7 +28,6 @@ public class SourceCodeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.source_code_fragment_layout, container, false);
         ButterKnife.inject(this, view);
-        testWebView();
         return view;
     }
 

@@ -39,7 +39,7 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
     }
 
     private void setupManager(DifficultyType difficultyType, String token) {
-        babelManager = new BabelManager(difficultyType, token);
+        babelManager = new BabelManager(difficultyType, token, this);
         babelManager.setupQueue(this);
     }
 
