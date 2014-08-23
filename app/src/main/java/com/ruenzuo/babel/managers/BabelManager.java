@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.ruenzuo.babel.helpers.GitHubAPIHelper;
 import com.ruenzuo.babel.helpers.TranslatorHelper;
 import com.ruenzuo.babel.helpers.URLHelper;
+import com.ruenzuo.babel.models.File;
 import com.ruenzuo.babel.models.Language;
 import com.ruenzuo.babel.models.Repository;
 import com.ruenzuo.babel.models.enums.DifficultyType;
@@ -64,10 +65,16 @@ public class BabelManager {
 
     public void setupQueue(Context context) {
         setupLanguages(context);
-        getRandomRepository(languages.get(0));
+        final Language language = languages.get(0);
+        getRandomRepository(language).continueWithTask(new Continuation<Repository, Task<File>>() {
+            @Override
+            public Task<File> then(Task<Repository> task) throws Exception {
+                return getRandomFile(language, task.getResult());
+            }
+        });
     }
 
-    public Task<Repository> getRandomRepository(Language language) {
+    private Task<Repository> getRandomRepository(Language language) {
         return gitHubAPIHelper.getRepositories(language, token).continueWith(new Continuation<JsonObject, Repository>() {
             @Override
             public Repository then(Task<JsonObject> task) throws Exception {
@@ -81,6 +88,18 @@ public class BabelManager {
         });
     }
 
-
+    private Task<File> getRandomFile(Language language, Repository repository) {
+        return gitHubAPIHelper.getFiles(language, repository, token).continueWith(new Continuation<JsonObject, File>() {
+            @Override
+            public File then(Task<JsonObject> task) throws Exception {
+                if (task.getError() != null) {
+                    throw task.getError();
+                }
+                JsonArray items = task.getResult().getAsJsonArray("items");
+                File[] files = translatorHelper.translateFiles(items);
+                return files[random.nextInt(files.length)];
+            }
+        });
+    }
 
 }

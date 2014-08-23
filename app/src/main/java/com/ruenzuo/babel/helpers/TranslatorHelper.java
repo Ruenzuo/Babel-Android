@@ -3,6 +3,7 @@ package com.ruenzuo.babel.helpers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.ruenzuo.babel.models.File;
 import com.ruenzuo.babel.models.Language;
 import com.ruenzuo.babel.models.Repository;
 
@@ -39,6 +40,10 @@ public class TranslatorHelper {
 
     public Repository[] translateRepositories(JsonArray repositories) {
         return gson.fromJson(repositories, Repository[].class);
+    }
+
+    public File[] translateFiles(JsonArray repositories) {
+        return gson.fromJson(repositories, File[].class);
     }
 
 }
