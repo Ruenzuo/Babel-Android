@@ -1,5 +1,11 @@
 package com.ruenzuo.babel.helpers;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+
+import com.ruenzuo.babel.R;
+
 /**
  * Created by renzocrisostomo on 17/08/14.
  */
@@ -21,6 +27,21 @@ public class URLHelper {
 
     public static String getURLStringForTokenValidity(String token) {
         return GITHUB_API_BASE_URL + "applications/" + GITHUB_CLIENT_ID + "/tokens/" + token;
+    }
+
+    public static String getURLStringForRepositories(String query) {
+        return GITHUB_API_BASE_URL + "search/repositories?" + query;
+    }
+
+    public static String getUserAgent(Context context) {
+        String versionName;
+        try {
+            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            versionName = packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException ex) {
+            versionName = "Unknown";
+        }
+        return context.getString(R.string.app_name) + "/" + versionName;
     }
 
 }

@@ -2,7 +2,9 @@ package com.ruenzuo.babel.helpers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.ruenzuo.babel.models.Language;
+import com.ruenzuo.babel.models.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +35,10 @@ public class TranslatorHelper {
 
     public Language[] translateLanguages(String file) {
         return gson.fromJson(file, Language[].class);
+    }
+
+    public Repository[] translateRepositories(JsonArray repositories) {
+        return gson.fromJson(repositories, Repository[].class);
     }
 
 }
