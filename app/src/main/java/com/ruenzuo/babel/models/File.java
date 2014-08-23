@@ -8,4 +8,12 @@ public class File {
     private String name;
     private String sha;
 
+    public String getName() {
+        return name;
+    }
+
+    public String getSha() {
+        return sha;
+    }
+
 }
