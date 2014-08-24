@@ -40,6 +40,7 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
     private int remainingSkips = 5;
     private boolean isLoading = false;
     private boolean isPooling = false;
+    private boolean isHintEnabled = false;
     private Language currentLanguage;
     private Repository currentRepository;
     private File currentFile;
@@ -74,6 +75,7 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
 
     private void nextFile() {
         Log.d("BabelActivity", "Next file loading.");
+        isHintEnabled = false;
         babelManager.loadNext().continueWith(new Continuation<Hashtable<String, Object>, Object>() {
             @Override
             public Object then(Task<Hashtable<String, Object>> task) throws Exception {
@@ -148,7 +150,11 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
     }
 
     private void hint() {
-
+        remainingHints--;
+        isHintEnabled = true;
+        invalidateOptionsMenu();
+        babelManager.setupHintLanguages(currentLanguage);
+        getFragmentManager().beginTransaction().replace(R.id.vwFrame, GuessOptionsFragment.newInstance(babelManager.getHintLanguages())).commit();
     }
 
     private void skip() {
@@ -170,11 +176,15 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
         if (!isLoading) {
             switch (currentBabelFragmentType) {
                 case BABEL_FRAGMENT_TYPE_SOURCE_CODE: {
-                    menu.add(Menu.NONE, R.id.action_skip, Menu.NONE, getSkipTitle()).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    if (remainingSkips > 0) {
+                        menu.add(Menu.NONE, R.id.action_skip, Menu.NONE, getSkipTitle()).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    }
                     return true;
                 }
                 case BABEL_FRAGMENT_TYPE_GUESS_OPTIONS: {
-                    menu.add(Menu.NONE, R.id.action_hint, Menu.NONE, getHintTitle()).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    if (remainingHints > 0 && !isHintEnabled) {
+                        menu.add(Menu.NONE, R.id.action_hint, Menu.NONE, getHintTitle()).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    }
                     return true;
                 }
             }
@@ -195,7 +205,13 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
                     break;
                 }
                 case BABEL_FRAGMENT_TYPE_GUESS_OPTIONS: {
-                    getFragmentManager().beginTransaction().replace(R.id.vwFrame, GuessOptionsFragment.newInstance(babelManager.getLanguages())).commit();
+                    Fragment fragment;
+                    if (isHintEnabled) {
+                        fragment = GuessOptionsFragment.newInstance(babelManager.getHintLanguages());
+                    } else {
+                        fragment = GuessOptionsFragment.newInstance(babelManager.getLanguages());
+                    }
+                    getFragmentManager().beginTransaction().replace(R.id.vwFrame, fragment).commit();
                     break;
                 }
             }
