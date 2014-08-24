@@ -8,8 +8,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SpinnerAdapter;
+import android.widget.Toast;
 
 import com.ruenzuo.babel.R;
+import com.ruenzuo.babel.definitions.OnGuessSelectedListener;
 import com.ruenzuo.babel.extensions.AnimatedActivity;
 import com.ruenzuo.babel.extensions.BabelSpinnerAdapter;
 import com.ruenzuo.babel.extensions.GitHubAPIRateLimitException;
@@ -32,12 +34,13 @@ import bolts.Task;
 /**
  * Created by renzocrisostomo on 21/08/14.
  */
-public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavigationListener {
+public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavigationListener, OnGuessSelectedListener {
 
     private BabelManager babelManager;
-    private BabelFragmentType currentBabelFragmentType;
+    private BabelFragmentType currentBabelFragmentType = BabelFragmentType.BABEL_FRAGMENT_TYPE_SOURCE_CODE;
     private int remainingHints = 5;
     private int remainingSkips = 5;
+    private int points = 0;
     private boolean isLoading = false;
     private boolean isPooling = false;
     private boolean isHintEnabled = false;
@@ -62,9 +65,21 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
     }
 
     private void setLoadingIndicators() {
-        Fragment fragment = getFragmentManager().findFragmentByTag("SourceCodeFragment");
-        if (fragment != null) {
-            getFragmentManager().beginTransaction().remove(fragment).commit();
+        switch (currentBabelFragmentType) {
+            case BABEL_FRAGMENT_TYPE_SOURCE_CODE: {
+                Fragment fragment = getFragmentManager().findFragmentByTag("SourceCodeFragment");
+                if (fragment != null) {
+                    getFragmentManager().beginTransaction().remove(fragment).commit();
+                }
+                break;
+            }
+            case BABEL_FRAGMENT_TYPE_GUESS_OPTIONS: {
+                Fragment fragment = getFragmentManager().findFragmentByTag("GuessOptionsFragment");
+                if (fragment != null) {
+                    getFragmentManager().beginTransaction().remove(fragment).commit();
+                }
+                break;
+            }
         }
         setProgressBarIndeterminateVisibility(true);
         getActionBar().setDisplayShowTitleEnabled(true);
@@ -140,6 +155,7 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
         getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         currentBabelFragmentType = BabelFragmentType.BABEL_FRAGMENT_TYPE_SOURCE_CODE;
         getFragmentManager().beginTransaction().replace(R.id.vwFrame, SourceCodeFragment.newInstance(currentHTMLString), "SourceCodeFragment").commit();
+        getActionBar().setSelectedNavigationItem(currentBabelFragmentType.ordinal());
         isLoading = false;
         invalidateOptionsMenu();
     }
@@ -154,12 +170,20 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
         isHintEnabled = true;
         invalidateOptionsMenu();
         babelManager.setupHintLanguages(currentLanguage);
-        getFragmentManager().beginTransaction().replace(R.id.vwFrame, GuessOptionsFragment.newInstance(babelManager.getHintLanguages())).commit();
+        getFragmentManager().beginTransaction().replace(R.id.vwFrame, GuessOptionsFragment.newInstance(babelManager.getHintLanguages()), "GuessOptionsFragment").commit();
+    }
+
+    public String getSkippedString() {
+        return getString(R.string.skipped) + ":\n" +
+                getString(R.string.language) + ": " + currentLanguage.getName() + "\n" +
+                getString(R.string.file) + ": " + currentFile.getName() + "\n" +
+                getString(R.string.repository) + ": " + currentRepository.getName();
     }
 
     private void skip() {
         remainingSkips--;
         setLoadingIndicators();
+        Toast.makeText(this, getSkippedString(), Toast.LENGTH_LONG).show();
         nextFile();
     }
 
@@ -211,7 +235,7 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
                     } else {
                         fragment = GuessOptionsFragment.newInstance(babelManager.getLanguages());
                     }
-                    getFragmentManager().beginTransaction().replace(R.id.vwFrame, fragment).commit();
+                    getFragmentManager().beginTransaction().replace(R.id.vwFrame, fragment, "GuessOptionsFragment").commit();
                     break;
                 }
             }
@@ -233,6 +257,33 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
     @Override
     public boolean shouldRequestWindowFeature() {
         return true;
+    }
+
+    public String getSuccessString() {
+        return getString(R.string.success) + "\n" +
+                getString(R.string.file) + ": " + currentFile.getName() + "\n" +
+                getString(R.string.repository) + ": " + currentRepository.getName();
+    }
+
+    public String getFailedString() {
+        return getString(R.string.failed) + "\n" +
+                getString(R.string.language) + ": " + currentLanguage.getName() + "\n" +
+                getString(R.string.file) + ": " + currentFile.getName() + "\n" +
+                getString(R.string.repository) + ": " + currentRepository.getName() + "\n" +
+                getString(R.string.total_points) + ": " + points;
+    }
+
+    @Override
+    public void onGuessSelected(Language language) {
+        if (currentLanguage.getIndex() == language.getIndex()) {
+            points++;
+            Toast.makeText(this, getSuccessString(), Toast.LENGTH_LONG).show();
+            setLoadingIndicators();
+            nextFile();
+        } else {
+            Toast.makeText(this, getFailedString(), Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
 }

@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.ruenzuo.babel.R;
-import com.ruenzuo.babel.definitions.OnDifficultyDialogFragmentListener;
+import com.ruenzuo.babel.definitions.OnDifficultySelectedListener;
 import com.ruenzuo.babel.fragments.DifficultyDialogFragment;
 import com.ruenzuo.babel.helpers.AuthorisationHelper;
 import com.ruenzuo.babel.helpers.ErrorNotificationHelper;
@@ -26,7 +26,7 @@ import butterknife.OnClick;
 import info.hoang8f.widget.FButton;
 
 
-public class MainActivity extends Activity implements OnDifficultyDialogFragmentListener {
+public class MainActivity extends Activity implements OnDifficultySelectedListener {
 
     @InjectView(R.id.btnStart)
     FButton btnStart;

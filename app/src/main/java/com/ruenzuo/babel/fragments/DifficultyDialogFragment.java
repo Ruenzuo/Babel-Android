@@ -7,7 +7,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-import com.ruenzuo.babel.definitions.OnDifficultyDialogFragmentListener;
+import com.ruenzuo.babel.definitions.OnDifficultySelectedListener;
 import com.ruenzuo.babel.models.enums.DifficultyType;
 
 /**
@@ -15,17 +15,17 @@ import com.ruenzuo.babel.models.enums.DifficultyType;
  */
 public class DifficultyDialogFragment extends DialogFragment {
 
-    private OnDifficultyDialogFragmentListener listener;
+    private OnDifficultySelectedListener listener;
     private DifficultyType difficultyType;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            listener = (OnDifficultyDialogFragmentListener) activity;
+            listener = (OnDifficultySelectedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnDifficultyDialogFragmentListener");
+                    + " must implement OnDifficultySelectedListener");
         }
     }
 
