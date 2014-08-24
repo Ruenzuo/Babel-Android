@@ -13,6 +13,7 @@
     <string name="hint">Hint</string>
     <string name="skip">Skip</string>
     <string name="error_while_loading_languages">Error while loading languages, application might not be usable.</string>
+    <string name="error_while_loading_licenses">Error while loading licenses.</string>
     <string name="error_while_loading_html_placeholder">Error while loading HTML placeholder, application might not be usable.</string>
     <string name="success">Correct!</string>
     <string name="file">File</string>
@@ -21,4 +22,8 @@
     <string name="language">Language</string>
     <string name="total_points">Total points</string>
     <string name="skipped">Skipped</string>
+    <string name="leaderboards">Leaderboards</string>
+    <string name="share_this_app">Share this app</string>
+    <string name="about_this_app">About this app</string>
+    <string name="licenses_activity_label">Licenses</string>
 </resources>

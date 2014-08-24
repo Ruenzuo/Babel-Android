@@ -1,6 +1,7 @@
 package com.ruenzuo.babel.activities;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import com.ruenzuo.babel.R;
 import com.ruenzuo.babel.definitions.OnDifficultySelectedListener;
+import com.ruenzuo.babel.fragments.AboutDialogFragment;
 import com.ruenzuo.babel.fragments.DifficultyDialogFragment;
 import com.ruenzuo.babel.helpers.AuthorisationHelper;
 import com.ruenzuo.babel.helpers.ErrorNotificationHelper;
@@ -62,6 +64,12 @@ public class MainActivity extends Activity implements OnDifficultySelectedListen
             return true;
         } else if (item.getItemId() == R.id.main_menu_action_log_out) {
             revokeToken();
+            return true;
+        } else if (item.getItemId() == R.id.main_menu_action_share) {
+            shareThisApp();
+            return true;
+        } else if (item.getItemId() == R.id.main_menu_action_about) {
+            aboutThisApp();
             return true;
         }
         return super.onMenuItemSelected(featureId, item);
@@ -145,6 +153,18 @@ public class MainActivity extends Activity implements OnDifficultySelectedListen
                 return null;
             }
         }, Task.UI_THREAD_EXECUTOR);
+    }
+
+    private void shareThisApp() {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, "Check Babel on Google Play! https://play.google.com/store/apps/details?id=com.ruenzuo.babel");
+        startActivity(Intent.createChooser(intent, "Share this app"));
+    }
+
+    private void aboutThisApp() {
+        DialogFragment dialog = new AboutDialogFragment();
+        dialog.show(getFragmentManager(), "InfoDialogFragment");
     }
 
     @Override
