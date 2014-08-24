@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Queue;
 import java.util.Random;
@@ -38,7 +39,8 @@ public class BabelManager {
     private DifficultyType difficultyType;
     private String token;
     private String placeholder;
-    private ArrayList<Language> languages;
+    private ArrayList<Language> languages = new ArrayList<Language>();
+    private ArrayList<Language> hintLanguages = new ArrayList<Language>();
     private TranslatorHelper translatorHelper = new TranslatorHelper();
     private GitHubAPIHelper gitHubAPIHelper;
     private Random random = new Random();
@@ -53,6 +55,10 @@ public class BabelManager {
 
     public ArrayList<Language> getLanguages() {
         return languages;
+    }
+
+    public ArrayList<Language> getHintLanguages() {
+        return hintLanguages;
     }
 
     private void setupLanguages(Context context) {
@@ -71,8 +77,31 @@ public class BabelManager {
         } catch (IOException e) {
             Toast.makeText(context, context.getString(R.string.error_while_loading_languages), Toast.LENGTH_LONG).show();
         }
-        languages = new ArrayList<Language>();
         languages.addAll(Arrays.asList(translatorHelper.translateLanguages(file)));
+    }
+
+    public void setupHintLanguages(Language currentLanguage) {
+        hintLanguages.clear();
+        hintLanguages.add(currentLanguage);
+        boolean finished = false;
+        do {
+            int randomIndex = random.nextInt(languages.size());
+            if (randomIndex != currentLanguage.getIndex()) {
+                boolean found = false;
+                for (Language language : hintLanguages) {
+                    if (randomIndex == language.getIndex()) {
+                        found = true;
+                    }
+                }
+                if (!found) {
+                    hintLanguages.add(languages.get(randomIndex));
+                }
+            }
+            if (hintLanguages.size() >= difficultyType.toMaxHints()) {
+                finished = true;
+            }
+        } while (!finished);
+        Collections.shuffle(hintLanguages, random);
     }
 
     private void setupPlaceholder(Context context) {
