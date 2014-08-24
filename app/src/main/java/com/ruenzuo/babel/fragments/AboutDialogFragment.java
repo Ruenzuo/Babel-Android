@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.ruenzuo.babel.R;
+import com.ruenzuo.babel.helpers.BabelUtils;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -32,7 +33,7 @@ public class AboutDialogFragment extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.about_dialog_fragment, null);
         ButterKnife.inject(this, view);
-        vwTextDeveloper.setText(Html.fromHtml("Babel by Renzo Crisóstomo <a href='http://www.twitter.com/Ruenzuo'>@Ruenzuo</a>"));
+        vwTextDeveloper.setText(Html.fromHtml("Babel (" + BabelUtils.getAppVersion(getActivity()) + ") by Renzo Crisóstomo <a href='http://www.twitter.com/Ruenzuo'>@Ruenzuo</a>"));
         vwTextDeveloper.setMovementMethod(LinkMovementMethod.getInstance());
         vwTextOpenSource.setText(Html.fromHtml("Babel for Android is built using open source software: <a href='com.ruenzuo.babel://open-source/license'>license</a>"));
         vwTextOpenSource.setMovementMethod(LinkMovementMethod.getInstance());

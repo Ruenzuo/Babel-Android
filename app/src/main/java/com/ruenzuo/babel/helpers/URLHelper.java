@@ -45,14 +45,7 @@ public class URLHelper {
     }
 
     public static String getUserAgent(Context context) {
-        String versionName;
-        try {
-            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            versionName = packageInfo.versionName;
-        } catch (PackageManager.NameNotFoundException ex) {
-            versionName = "Unknown";
-        }
-        return context.getString(R.string.app_name) + "/" + versionName;
+        return context.getString(R.string.app_name) + "/" + BabelUtils.getAppVersion(context);
     }
 
 }
