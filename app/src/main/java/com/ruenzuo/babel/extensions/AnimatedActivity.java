@@ -10,7 +10,7 @@ import com.ruenzuo.babel.R;
 /**
  * Created by renzocrisostomo on 17/08/14.
  */
-public abstract class AnimatedActivity extends Activity {
+public abstract class AnimatedActivity extends TrackedActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
