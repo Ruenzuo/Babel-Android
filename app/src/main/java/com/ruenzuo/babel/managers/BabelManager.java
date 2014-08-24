@@ -208,7 +208,7 @@ public class BabelManager {
     }
 
     private Task<String> getHTMLString(final Language language, Repository repository, File file) {
-        return gitHubAPIHelper.getBlob(repository, file).continueWith(new Continuation<JsonObject, String>() {
+        return gitHubAPIHelper.getBlob(repository, file, token).continueWith(new Continuation<JsonObject, String>() {
             @Override
             public String then(Task<JsonObject> task) throws Exception {
                 if (task.getError() != null) {

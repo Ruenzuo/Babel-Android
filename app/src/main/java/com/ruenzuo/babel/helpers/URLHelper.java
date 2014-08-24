@@ -37,11 +37,11 @@ public class URLHelper {
     }
 
     public static String getURLStringForFiles(Language language, Repository repository, String token) {
-        return GITHUB_API_BASE_URL + "search/code?q=language:" + language.getSearch() + "+repo:" + repository.getName() + "&token=" + token;
+        return GITHUB_API_BASE_URL + "search/code?q=language:" + language.getSearch() + "+repo:" + repository.getName() + "&access_token=" + token;
     }
 
-    public static String getURLStringForBlob(Repository repository, File file) {
-        return GITHUB_API_BASE_URL + "repos/" + repository.getName() + "/git/blobs/" + file.getSha();
+    public static String getURLStringForBlob(Repository repository, File file, String token) {
+        return GITHUB_API_BASE_URL + "repos/" + repository.getName() + "/git/blobs/" + file.getSha() + "?access_token=" + token;
     }
 
     public static String getUserAgent(Context context) {

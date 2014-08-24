@@ -9,9 +9,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.ruenzuo.babel.R;
+import com.ruenzuo.babel.models.Language;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -24,51 +26,23 @@ public class SourceCodeFragment extends Fragment {
     @InjectView(R.id.vwWeb)
     WebView vwWeb;
 
+    public static SourceCodeFragment newInstance(String HTMLString) {
+        SourceCodeFragment fragment = new SourceCodeFragment();
+        Bundle args = new Bundle();
+        args.putString("HTMLString", HTMLString);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.source_code_fragment_layout, container, false);
         ButterKnife.inject(this, view);
-        return view;
-    }
-
-    private String loadTestData() {
-        String data = "";
-        try {
-            InputStream inputStream = getActivity().getAssets().open("WebRoot/index.html");
-            int size = inputStream.available();
-            byte[] buffer = new byte[size];
-            inputStream.read(buffer);
-            inputStream.close();
-            data = new String(buffer);
-        } catch (IOException e) {
-            //TODO: Handle exception.
-        }
-        return data;
-    }
-
-    private String loadTestFile() {
-        String file = "";
-        try {
-            InputStream inputStream = getActivity().getAssets().open("BABBabelManager.m");
-            int size = inputStream.available();
-            byte[] buffer = new byte[size];
-            inputStream.read(buffer);
-            inputStream.close();
-            file = new String(buffer);
-        } catch (IOException e) {
-            //TODO: Handle exception.
-        }
-        return file;
-    }
-
-    private void testWebView() {
         WebSettings webSettings = vwWeb.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        String data = loadTestData();
-        data = data.replace("BABEL_LANGUAGE_PLACEHOLDER", "objectivec");
-        String file = loadTestFile();
-        data = data.replace("BABEL_CODE_PLACEHOLDER", file);
-        vwWeb.loadDataWithBaseURL("file:///android_asset/WebRoot/index.html", data, "text/html", "UTF-8", null);
+        String HTMLString = getArguments().getString("HTMLString");
+        vwWeb.loadDataWithBaseURL("file:///android_asset/WebRoot/index.html", HTMLString, "text/html", "UTF-8", null);
+        return view;
     }
 
 }

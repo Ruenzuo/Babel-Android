@@ -34,6 +34,16 @@ public class TranslatorHelper {
         return map;
     }
 
+    public static String translateToString(Map<String, String> map) {
+        StringBuilder builder = new StringBuilder();
+        for (String key : map.keySet()) {
+            builder = builder.append(key).append("=").append(map.get(key));
+            builder.append("&");
+        }
+        builder = builder.replace(builder.length() - 1, builder.length(), "");
+        return builder.toString();
+    }
+
     public Language[] translateLanguages(String file) {
         return gson.fromJson(file, Language[].class);
     }

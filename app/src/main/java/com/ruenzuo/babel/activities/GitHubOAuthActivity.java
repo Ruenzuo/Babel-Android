@@ -87,6 +87,11 @@ public class GitHubOAuthActivity extends AnimatedActivity {
         webView.loadUrl(URLHelper.getURLStringForAuthorization());
     }
 
+    @Override
+    public boolean shouldRequestWindowFeature() {
+        return false;
+    }
+
     public void getAccessToken(final String code) {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
