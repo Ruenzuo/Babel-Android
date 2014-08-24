@@ -1,16 +1,18 @@
 package com.ruenzuo.babel.activities;
 
 import android.app.ActionBar;
+import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
 import android.widget.SpinnerAdapter;
 
 import com.ruenzuo.babel.R;
 import com.ruenzuo.babel.extensions.AnimatedActivity;
 import com.ruenzuo.babel.extensions.BabelSpinnerAdapter;
+import com.ruenzuo.babel.extensions.GitHubAPIRateLimitException;
 import com.ruenzuo.babel.fragments.GuessOptionsFragment;
 import com.ruenzuo.babel.fragments.SourceCodeFragment;
 import com.ruenzuo.babel.managers.BabelManager;
@@ -21,6 +23,8 @@ import com.ruenzuo.babel.models.enums.BabelFragmentType;
 import com.ruenzuo.babel.models.enums.DifficultyType;
 
 import java.util.Hashtable;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import bolts.Continuation;
 import bolts.Task;
@@ -35,10 +39,13 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
     private int remainingHints = 5;
     private int remainingSkips = 5;
     private boolean isLoading = false;
+    private boolean isPooling = false;
     private Language currentLanguage;
     private Repository currentRepository;
     private File currentFile;
     private String currentHTMLString;
+    private Timer timer;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +61,10 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
     }
 
     private void setLoadingIndicators() {
+        Fragment fragment = getFragmentManager().findFragmentByTag("SourceCodeFragment");
+        if (fragment != null) {
+            getFragmentManager().beginTransaction().remove(fragment).commit();
+        }
         setProgressBarIndeterminateVisibility(true);
         getActionBar().setDisplayShowTitleEnabled(true);
         getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
@@ -62,12 +73,25 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
     }
 
     private void nextFile() {
+        Log.d("BabelActivity", "Next file loading.");
         babelManager.loadNext().continueWith(new Continuation<Hashtable<String, Object>, Object>() {
             @Override
             public Object then(Task<Hashtable<String, Object>> task) throws Exception {
+                Log.d("BabelActivity", "Load next done.");
                 if (task.getError() != null) {
-                    //TODO: Handle error.
+                    if (task.getError() instanceof GitHubAPIRateLimitException) {
+                        Log.e("BabelActivity", "Rate limit reached.");
+                        if (!isPooling) {
+                            poolRate();
+                        }
+                    } else {
+                        Log.e("BabelActivity", "Error while nextFile: " + task.getError().getLocalizedMessage());
+                        nextFile();
+                    }
                 } else {
+                    if (isPooling) {
+                        stopPool();
+                    }
                     currentLanguage = (Language) task.getResult().get("Language");
                     currentRepository = (Repository) task.getResult().get("Repository");
                     currentFile = (File) task.getResult().get("File");
@@ -83,12 +107,37 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
         }, Task.UI_THREAD_EXECUTOR);
     }
 
+    private void poolRate() {
+        isPooling = true;
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage("Pooling rate.");
+        }
+        progressDialog.show();
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+
+            @Override
+            public void run() {
+                nextFile();
+            }
+
+        }, 0, 5 * 1000);
+    }
+
+    private void stopPool() {
+        progressDialog.dismiss();
+        isPooling = false;
+        timer.cancel();
+    }
+
     private void loadCurrentFile() {
         setProgressBarIndeterminateVisibility(false);
         getActionBar().setDisplayShowTitleEnabled(false);
         getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         currentBabelFragmentType = BabelFragmentType.BABEL_FRAGMENT_TYPE_SOURCE_CODE;
-        getFragmentManager().beginTransaction().replace(R.id.vwFrame, SourceCodeFragment.newInstance(currentHTMLString)).commit();
+        getFragmentManager().beginTransaction().replace(R.id.vwFrame, SourceCodeFragment.newInstance(currentHTMLString), "SourceCodeFragment").commit();
         isLoading = false;
         invalidateOptionsMenu();
     }
@@ -96,6 +145,16 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
     private void setupManager(DifficultyType difficultyType, String token) {
         babelManager = new BabelManager(difficultyType, token, this);
         babelManager.setupQueue(this);
+    }
+
+    private void hint() {
+
+    }
+
+    private void skip() {
+        remainingSkips--;
+        setLoadingIndicators();
+        nextFile();
     }
 
     private String getHintTitle() {
@@ -132,7 +191,7 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
             currentBabelFragmentType = selectedBabelFragmentType;
             switch (currentBabelFragmentType) {
                 case BABEL_FRAGMENT_TYPE_SOURCE_CODE: {
-                    getFragmentManager().beginTransaction().replace(R.id.vwFrame, SourceCodeFragment.newInstance(currentHTMLString)).commit();
+                    getFragmentManager().beginTransaction().replace(R.id.vwFrame, SourceCodeFragment.newInstance(currentHTMLString), "SourceCodeFragment").commit();
                     break;
                 }
                 case BABEL_FRAGMENT_TYPE_GUESS_OPTIONS: {
@@ -143,6 +202,16 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
             invalidateOptionsMenu();
         }
         return true;
+    }
+
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        if (item.getItemId() == R.id.action_hint) {
+            hint();
+        } else if (item.getItemId() == R.id.action_skip) {
+            skip();
+        }
+        return super.onMenuItemSelected(featureId, item);
     }
 
     @Override

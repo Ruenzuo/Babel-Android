@@ -12,4 +12,6 @@
     <string name="tap_to_start">Tap to Start</string>
     <string name="hint">Hint</string>
     <string name="skip">Skip</string>
+    <string name="error_while_loading_languages">Error while loading languages, application might not be usable.</string>
+    <string name="error_while_loading_html_placeholder">Error while loading HTML placeholder, application might not be usable.</string>
 </resources>

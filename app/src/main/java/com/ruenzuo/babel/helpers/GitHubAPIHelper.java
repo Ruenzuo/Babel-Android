@@ -1,13 +1,18 @@
 package com.ruenzuo.babel.helpers;
 
+import android.util.Log;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.ruenzuo.babel.extensions.GitHubAPIRateLimitException;
 import com.ruenzuo.babel.models.File;
 import com.ruenzuo.babel.models.Language;
 import com.ruenzuo.babel.models.Repository;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+
+import org.apache.http.HttpStatus;
 
 import java.util.Hashtable;
 import java.util.Map;
@@ -65,8 +70,12 @@ public class GitHubAPIHelper {
                         .get()
                         .build();
                 Response response = httpClient.newCall(request).execute();
-                processForCache(response, language, token);
-                return jsonParser.parse(response.body().string()).getAsJsonObject();
+                if (response.code() == HttpStatus.SC_FORBIDDEN) {
+                    throw new GitHubAPIRateLimitException("Rate limit reached.");
+                } else {
+                    processForCache(response, language, token);
+                    return jsonParser.parse(response.body().string()).getAsJsonObject();
+                }
             }
         });
     }
@@ -81,7 +90,11 @@ public class GitHubAPIHelper {
                         .get()
                         .build();
                 Response response = httpClient.newCall(request).execute();
-                return jsonParser.parse(response.body().string()).getAsJsonObject();
+                if (response.code() == HttpStatus.SC_FORBIDDEN) {
+                    throw new GitHubAPIRateLimitException("Rate limit reached.");
+                } else {
+                    return jsonParser.parse(response.body().string()).getAsJsonObject();
+                }
             }
         });
     }
@@ -96,7 +109,11 @@ public class GitHubAPIHelper {
                         .get()
                         .build();
                 Response response = httpClient.newCall(request).execute();
-                return jsonParser.parse(response.body().string()).getAsJsonObject();
+                if (response.code() == HttpStatus.SC_FORBIDDEN) {
+                    throw new GitHubAPIRateLimitException("Rate limit reached.");
+                } else {
+                    return jsonParser.parse(response.body().string()).getAsJsonObject();
+                }
             }
         });
     }
