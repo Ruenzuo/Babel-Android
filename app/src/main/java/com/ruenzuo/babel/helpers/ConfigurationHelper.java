@@ -1,7 +1,6 @@
 package com.ruenzuo.babel.helpers;
 
 import com.ruenzuo.babel.models.Language;
-import com.ruenzuo.babel.models.enums.DifficultyType;
 
 import java.util.ArrayList;
 

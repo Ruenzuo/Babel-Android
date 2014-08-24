@@ -14,4 +14,11 @@
     <string name="skip">Skip</string>
     <string name="error_while_loading_languages">Error while loading languages, application might not be usable.</string>
     <string name="error_while_loading_html_placeholder">Error while loading HTML placeholder, application might not be usable.</string>
+    <string name="success">Correct!</string>
+    <string name="file">File</string>
+    <string name="repository">Repository</string>
+    <string name="failed">Incorrect!</string>
+    <string name="language">Language</string>
+    <string name="total_points">Total points</string>
+    <string name="skipped">Skipped</string>
 </resources>
