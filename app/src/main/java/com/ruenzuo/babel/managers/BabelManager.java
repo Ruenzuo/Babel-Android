@@ -2,9 +2,11 @@ package com.ruenzuo.babel.managers;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.ruenzuo.babel.R;
 import com.ruenzuo.babel.helpers.ConfigurationHelper;
 import com.ruenzuo.babel.helpers.GitHubAPIHelper;
 import com.ruenzuo.babel.helpers.TranslatorHelper;
@@ -67,7 +69,7 @@ public class BabelManager {
             inputStream.close();
             file = new String(buffer);
         } catch (IOException e) {
-            //TODO: Handle exception.
+            Toast.makeText(context, context.getString(R.string.error_while_loading_languages), Toast.LENGTH_LONG).show();
         }
         languages = new ArrayList<Language>();
         languages.addAll(Arrays.asList(translatorHelper.translateLanguages(file)));
@@ -83,7 +85,7 @@ public class BabelManager {
             inputStream.close();
             placeholder = new String(buffer);
         } catch (IOException e) {
-            //TODO: Handle exception.
+            Toast.makeText(context, context.getString(R.string.error_while_loading_html_placeholder), Toast.LENGTH_LONG).show();
         }
     }
 
