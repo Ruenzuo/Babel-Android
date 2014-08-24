@@ -1,6 +1,5 @@
 package com.ruenzuo.babel.activities;
 
-import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -13,6 +12,7 @@ import android.widget.Toast;
 
 import com.ruenzuo.babel.R;
 import com.ruenzuo.babel.definitions.OnDifficultySelectedListener;
+import com.ruenzuo.babel.extensions.TrackedActivity;
 import com.ruenzuo.babel.fragments.AboutDialogFragment;
 import com.ruenzuo.babel.fragments.DifficultyDialogFragment;
 import com.ruenzuo.babel.helpers.AuthorisationHelper;
@@ -28,7 +28,7 @@ import butterknife.OnClick;
 import info.hoang8f.widget.FButton;
 
 
-public class MainActivity extends Activity implements OnDifficultySelectedListener {
+public class MainActivity extends TrackedActivity implements OnDifficultySelectedListener {
 
     @InjectView(R.id.btnStart)
     FButton btnStart;
