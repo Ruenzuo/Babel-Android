@@ -11,10 +11,21 @@ android {
         versionCode 1
         versionName "0.0.1"
     }
+    signingConfigs {
+        release {
+            keyAlias = 'ruenzuo'
+            keyPassword = '1337Figuratively'
+            storeFile = file('../.signing/babel.keystore')
+            storePassword = '1337Figuratively'
+        }
+    }
     buildTypes {
         release {
+            zipAlign true
+            debuggable true
+            signingConfig signingConfigs.release
             runProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
 }
