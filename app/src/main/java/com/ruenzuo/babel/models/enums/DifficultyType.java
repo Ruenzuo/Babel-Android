@@ -7,13 +7,15 @@ import java.io.Serializable;
  */
 public enum DifficultyType implements Serializable {
 
-    DIFFICULTY_TYPE_EASY ("Easy", 3), DIFFICULTY_TYPE_NORMAL ("Normal", 5), DIFFICULTY_TYPE_HARD ("Hard", 7);
+    DIFFICULTY_TYPE_EASY ("Easy", "CgkI2ev7m90IEAIQAA", 3), DIFFICULTY_TYPE_NORMAL ("Normal", "CgkI2ev7m90IEAIQAQ", 5), DIFFICULTY_TYPE_HARD ("Hard", "CgkI2ev7m90IEAIQAg", 7);
 
     private final String print;
+    private final String leaderboardIdentifier;
     private final int maxHints;
 
-    DifficultyType(String prnt, int mxHnts) {
+    DifficultyType(String prnt, String leaderboardId, int mxHnts) {
         print = prnt;
+        leaderboardIdentifier = leaderboardId;
         maxHints = mxHnts;
     }
 
@@ -23,6 +25,10 @@ public enum DifficultyType implements Serializable {
 
     public String toPrint() {
         return print;
+    }
+
+    public String toLeaderboardIdentifier() {
+        return leaderboardIdentifier;
     }
 
     public static CharSequence[] difficultyTypes() {
