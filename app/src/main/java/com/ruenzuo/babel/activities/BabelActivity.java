@@ -22,8 +22,8 @@ import com.ruenzuo.babel.managers.BabelManager;
 import com.ruenzuo.babel.models.File;
 import com.ruenzuo.babel.models.Language;
 import com.ruenzuo.babel.models.Repository;
+import com.ruenzuo.babel.models.enums.BabelDifficultyType;
 import com.ruenzuo.babel.models.enums.BabelFragmentType;
-import com.ruenzuo.babel.models.enums.DifficultyType;
 
 import java.util.Hashtable;
 import java.util.Timer;
@@ -59,8 +59,8 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
         SpinnerAdapter spinnerAdapter = new BabelSpinnerAdapter<CharSequence>(this, android.R.layout.simple_spinner_dropdown_item,BabelFragmentType.babelFragmentTypes());
         getActionBar().setListNavigationCallbacks(spinnerAdapter, this);
         String token = getIntent().getStringExtra("Token");
-        DifficultyType difficultyType = (DifficultyType) getIntent().getSerializableExtra("DifficultyType");
-        setupManager(difficultyType, token);
+        BabelDifficultyType babelDifficultyType = (BabelDifficultyType) getIntent().getSerializableExtra("DifficultyType");
+        setupManager(babelDifficultyType, token);
         setLoadingIndicators();
         nextFile();
     }
@@ -161,8 +161,8 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
         invalidateOptionsMenu();
     }
 
-    private void setupManager(DifficultyType difficultyType, String token) {
-        babelManager = new BabelManager(difficultyType, token, this);
+    private void setupManager(BabelDifficultyType babelDifficultyType, String token) {
+        babelManager = new BabelManager(babelDifficultyType, token, this);
         babelManager.setupQueue(this);
     }
 
@@ -285,7 +285,7 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
             Toast.makeText(this, getFailedString(), Toast.LENGTH_LONG).show();
             Intent intent = new Intent();
             intent.putExtra("Points", points);
-            intent.putExtra("DifficultyType", babelManager.getDifficultyType());
+            intent.putExtra("DifficultyType", babelManager.getBabelDifficultyType());
             setResult(RESULT_OK, intent);
             finish();
         }

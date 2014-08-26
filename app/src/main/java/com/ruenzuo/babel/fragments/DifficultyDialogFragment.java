@@ -8,8 +8,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import com.ruenzuo.babel.definitions.OnDifficultySelectedListener;
+import com.ruenzuo.babel.models.enums.BabelDifficultyType;
 import com.ruenzuo.babel.models.enums.DifficultyDialogFragmentType;
-import com.ruenzuo.babel.models.enums.DifficultyType;
 
 /**
  * Created by renzocrisostomo on 21/08/14.
@@ -40,11 +40,11 @@ public class DifficultyDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setItems(DifficultyType.difficultyTypes(), new DialogInterface.OnClickListener() {
+        builder.setItems(BabelDifficultyType.difficultyTypes(), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 DifficultyDialogFragmentType difficultyDialogFragmentType = (DifficultyDialogFragmentType) getArguments().getSerializable("DifficultyDialogFragmentType");
-                listener.onDifficultySelected(DifficultyType.values()[which], difficultyDialogFragmentType);
+                listener.onDifficultySelected(BabelDifficultyType.values()[which], difficultyDialogFragmentType);
             }
         });
         return builder.create();

@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by renzocrisostomo on 21/08/14.
  */
-public enum DifficultyType implements Serializable {
+public enum BabelDifficultyType implements Serializable {
 
     DIFFICULTY_TYPE_EASY ("Easy", "CgkI2ev7m90IEAIQAA", 3), DIFFICULTY_TYPE_NORMAL ("Normal", "CgkI2ev7m90IEAIQAQ", 5), DIFFICULTY_TYPE_HARD ("Hard", "CgkI2ev7m90IEAIQAg", 7);
 
@@ -13,7 +13,7 @@ public enum DifficultyType implements Serializable {
     private final String leaderboardIdentifier;
     private final int maxHints;
 
-    DifficultyType(String prnt, String leaderboardId, int mxHnts) {
+    BabelDifficultyType(String prnt, String leaderboardId, int mxHnts) {
         print = prnt;
         leaderboardIdentifier = leaderboardId;
         maxHints = mxHnts;
@@ -32,10 +32,10 @@ public enum DifficultyType implements Serializable {
     }
 
     public static CharSequence[] difficultyTypes() {
-        int length = DifficultyType.values().length;
+        int length = BabelDifficultyType.values().length;
         CharSequence[] typesPrint = new CharSequence[length];
         for (int i = 0; i < length; i++) {
-            typesPrint[i] = DifficultyType.values()[i].toPrint();
+            typesPrint[i] = BabelDifficultyType.values()[i].toPrint();
         }
         return typesPrint;
     }

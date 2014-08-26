@@ -14,7 +14,7 @@ import com.ruenzuo.babel.helpers.URLHelper;
 import com.ruenzuo.babel.models.File;
 import com.ruenzuo.babel.models.Language;
 import com.ruenzuo.babel.models.Repository;
-import com.ruenzuo.babel.models.enums.DifficultyType;
+import com.ruenzuo.babel.models.enums.BabelDifficultyType;
 import com.securepreferences.util.Base64;
 
 import java.io.IOException;
@@ -36,7 +36,7 @@ import bolts.Task;
  */
 public class BabelManager {
 
-    private DifficultyType difficultyType;
+    private BabelDifficultyType babelDifficultyType;
     private String token;
     private String placeholder;
     private ArrayList<Language> languages = new ArrayList<Language>();
@@ -47,8 +47,8 @@ public class BabelManager {
     private ConfigurationHelper configurationHelper = new ConfigurationHelper();
     private Queue<Hashtable<String, Object>> queue = new LinkedBlockingQueue<Hashtable<String, Object>>();
 
-    public BabelManager(DifficultyType difficultyType, String token, Context context) {
-        this.difficultyType = difficultyType;
+    public BabelManager(BabelDifficultyType babelDifficultyType, String token, Context context) {
+        this.babelDifficultyType = babelDifficultyType;
         this.token = token;
         gitHubAPIHelper = new GitHubAPIHelper(URLHelper.getUserAgent(context));
     }
@@ -61,8 +61,8 @@ public class BabelManager {
         return hintLanguages;
     }
 
-    public DifficultyType getDifficultyType() {
-        return difficultyType;
+    public BabelDifficultyType getBabelDifficultyType() {
+        return babelDifficultyType;
     }
 
     private void setupLanguages(Context context) {
@@ -70,7 +70,7 @@ public class BabelManager {
         try {
             StringBuilder stringBuilder = new StringBuilder("info-");
             InputStream inputStream = context.getAssets()
-                    .open(stringBuilder.append(difficultyType.toPrint().toLowerCase())
+                    .open(stringBuilder.append(babelDifficultyType.toPrint().toLowerCase())
                             .append(".json")
                             .toString());
             int size = inputStream.available();
@@ -101,7 +101,7 @@ public class BabelManager {
                     hintLanguages.add(languages.get(randomIndex));
                 }
             }
-            if (hintLanguages.size() >= difficultyType.toMaxHints()) {
+            if (hintLanguages.size() >= babelDifficultyType.toMaxHints()) {
                 finished = true;
             }
         } while (!finished);

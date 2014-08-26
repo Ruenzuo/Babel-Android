@@ -19,9 +19,11 @@ import com.ruenzuo.babel.fragments.AboutDialogFragment;
 import com.ruenzuo.babel.fragments.DifficultyDialogFragment;
 import com.ruenzuo.babel.helpers.AuthorisationHelper;
 import com.ruenzuo.babel.helpers.ErrorNotificationHelper;
+import com.ruenzuo.babel.helpers.GooglePlayGameServicesHelper;
 import com.ruenzuo.babel.helpers.SecureStorageHelper;
+import com.ruenzuo.babel.models.enums.BabelAchievementType;
+import com.ruenzuo.babel.models.enums.BabelDifficultyType;
 import com.ruenzuo.babel.models.enums.DifficultyDialogFragmentType;
-import com.ruenzuo.babel.models.enums.DifficultyType;
 
 import bolts.Continuation;
 import bolts.Task;
@@ -38,9 +40,11 @@ public class MainActivity extends TrackedActivity implements OnDifficultySelecte
 
     private static final int AUTHORISATION_REQUEST_CODE = 1;
     private static final int LEADERBOARD_REQUEST_CODE = 2;
-    private static final int GAME_REQUEST_CODE = 2;
+    private static final int GAME_REQUEST_CODE = 3;
+    private static final int ACHIEVEMENT_REQUEST_CODE = 4;
     private SecureStorageHelper secureStorageHelper;
     private AuthorisationHelper authorisationHelper = new AuthorisationHelper();
+    private GooglePlayGameServicesHelper gameServicesHelper = new GooglePlayGameServicesHelper();
     private String token;
     private GameHelper gameHelper;
 
@@ -97,6 +101,12 @@ public class MainActivity extends TrackedActivity implements OnDifficultySelecte
             } else {
                 gameHelper.beginUserInitiatedSignIn();
             }
+        } else if (item.getItemId() == R.id.main_menu_action_achievements) {
+            if (gameHelper.isSignedIn()) {
+                startActivityForResult(Games.Achievements.getAchievementsIntent(gameHelper.getApiClient()), ACHIEVEMENT_REQUEST_CODE);
+            } else {
+                gameHelper.beginUserInitiatedSignIn();
+            }
         }
         return super.onMenuItemSelected(featureId, item);
     }
@@ -112,10 +122,14 @@ public class MainActivity extends TrackedActivity implements OnDifficultySelecte
             }
         } else if (requestCode == GAME_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                DifficultyType difficultyType = (DifficultyType) data.getSerializableExtra("DifficultyType");
+                BabelDifficultyType babelDifficultyType = (BabelDifficultyType) data.getSerializableExtra("DifficultyType");
                 int points = data.getIntExtra("Points", 0);
                 if (points != 0) {
-                    Games.Leaderboards.submitScore(gameHelper.getApiClient(), difficultyType.toLeaderboardIdentifier(), points);
+                    Games.Leaderboards.submitScore(gameHelper.getApiClient(), babelDifficultyType.toLeaderboardIdentifier(), points);
+                }
+                BabelAchievementType achievement = gameServicesHelper.achievementUnlocked(points, babelDifficultyType);
+                if (achievement != null) {
+                    Games.Achievements.unlock(gameHelper.getApiClient(), achievement.toAchievementIdentifier());
                 }
             }
         } else {
@@ -220,17 +234,17 @@ public class MainActivity extends TrackedActivity implements OnDifficultySelecte
     }
 
     @Override
-    public void onDifficultySelected(DifficultyType difficultyType, DifficultyDialogFragmentType difficultyDialogFragmentType) {
+    public void onDifficultySelected(BabelDifficultyType babelDifficultyType, DifficultyDialogFragmentType difficultyDialogFragmentType) {
         switch (difficultyDialogFragmentType) {
             case DIFFICULTY_DIALOG_FRAGMENT_TYPE_START: {
                 Intent intent = new Intent(this, BabelActivity.class);
-                intent.putExtra("DifficultyType", difficultyType);
+                intent.putExtra("DifficultyType", babelDifficultyType);
                 intent.putExtra("Token", token);
                 startActivityForResult(intent, GAME_REQUEST_CODE);
                 break;
             }
             case DIFFICULTY_DIALOG_FRAGMENT_TYPE_LEADERBOARDS: {
-                startActivityForResult(Games.Leaderboards.getLeaderboardIntent(gameHelper.getApiClient(), difficultyType.toLeaderboardIdentifier()), LEADERBOARD_REQUEST_CODE);
+                startActivityForResult(Games.Leaderboards.getLeaderboardIntent(gameHelper.getApiClient(), babelDifficultyType.toLeaderboardIdentifier()), LEADERBOARD_REQUEST_CODE);
                 break;
             }
         }
