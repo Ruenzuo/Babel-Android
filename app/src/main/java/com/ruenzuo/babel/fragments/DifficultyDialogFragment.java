@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import com.ruenzuo.babel.definitions.OnDifficultySelectedListener;
+import com.ruenzuo.babel.models.enums.DifficultyDialogFragmentType;
 import com.ruenzuo.babel.models.enums.DifficultyType;
 
 /**
@@ -16,7 +17,14 @@ import com.ruenzuo.babel.models.enums.DifficultyType;
 public class DifficultyDialogFragment extends DialogFragment {
 
     private OnDifficultySelectedListener listener;
-    private DifficultyType difficultyType;
+
+    public static DifficultyDialogFragment newInstance(DifficultyDialogFragmentType difficultyDialogFragmentType) {
+        DifficultyDialogFragment fragment = new DifficultyDialogFragment();
+        Bundle args = new Bundle();
+        args.putSerializable("DifficultyDialogFragmentType", difficultyDialogFragmentType);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -35,8 +43,8 @@ public class DifficultyDialogFragment extends DialogFragment {
         builder.setItems(DifficultyType.difficultyTypes(), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                difficultyType = DifficultyType.values()[which];
-                listener.onDifficultySelected(difficultyType);
+                DifficultyDialogFragmentType difficultyDialogFragmentType = (DifficultyDialogFragmentType) getArguments().getSerializable("DifficultyDialogFragmentType");
+                listener.onDifficultySelected(DifficultyType.values()[which], difficultyDialogFragmentType);
             }
         });
         return builder.create();

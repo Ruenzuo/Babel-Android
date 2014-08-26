@@ -1,9 +1,11 @@
 package com.ruenzuo.babel.models.enums;
 
+import java.io.Serializable;
+
 /**
  * Created by renzocrisostomo on 21/08/14.
  */
-public enum BabelFragmentType {
+public enum BabelFragmentType implements Serializable {
 
     BABEL_FRAGMENT_TYPE_SOURCE_CODE ("Code"), BABEL_FRAGMENT_TYPE_GUESS_OPTIONS ("Guess");
 

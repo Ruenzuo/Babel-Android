@@ -1,1 +1,1 @@
-include ':app', ':External:secure-preferences:library'
+include ':app', ':External:secure-preferences:library', ':External:BaseGameUtils'

@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.games.Games;
+import com.google.example.games.basegameutils.GameHelper;
 import com.ruenzuo.babel.R;
 import com.ruenzuo.babel.definitions.OnDifficultySelectedListener;
 import com.ruenzuo.babel.extensions.TrackedActivity;
@@ -18,6 +20,7 @@ import com.ruenzuo.babel.fragments.DifficultyDialogFragment;
 import com.ruenzuo.babel.helpers.AuthorisationHelper;
 import com.ruenzuo.babel.helpers.ErrorNotificationHelper;
 import com.ruenzuo.babel.helpers.SecureStorageHelper;
+import com.ruenzuo.babel.models.enums.DifficultyDialogFragmentType;
 import com.ruenzuo.babel.models.enums.DifficultyType;
 
 import bolts.Continuation;
@@ -34,16 +37,31 @@ public class MainActivity extends TrackedActivity implements OnDifficultySelecte
     FButton btnStart;
 
     private static final int AUTHORISATION_REQUEST_CODE = 1;
+    private static final int LEADERBOARD_REQUEST_CODE = 2;
     private SecureStorageHelper secureStorageHelper;
     private AuthorisationHelper authorisationHelper = new AuthorisationHelper();
     private String token;
+    private GameHelper gameHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity_layout);
+        setupGameHelper();
         ButterKnife.inject(this);
         checkTokenValidity();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        gameHelper.onStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        gameHelper.onStop();
     }
 
     @Override
@@ -71,25 +89,51 @@ public class MainActivity extends TrackedActivity implements OnDifficultySelecte
         } else if (item.getItemId() == R.id.main_menu_action_about) {
             aboutThisApp();
             return true;
+        } else if (item.getItemId() == R.id.main_menu_action_leaderboards) {
+            if (gameHelper.isSignedIn()) {
+                DifficultyDialogFragment dialogFragment = DifficultyDialogFragment.newInstance(DifficultyDialogFragmentType.DIFFICULTY_DIALOG_FRAGMENT_TYPE_LEADERBOARDS);
+                dialogFragment.show(getFragmentManager(), "DifficultyDialogFragment");
+            } else {
+                gameHelper.beginUserInitiatedSignIn();
+            }
         }
         return super.onMenuItemSelected(featureId, item);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == AUTHORISATION_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 token = data.getStringExtra("token");
                 secureStorageHelper.store(token);
                 showLogOutView();
             }
+        } else {
+            gameHelper.onActivityResult(requestCode, resultCode, data);
         }
     }
 
     @OnClick(R.id.btnStart)
     void start() {
-        DifficultyDialogFragment dialogFragment = new DifficultyDialogFragment();
+        DifficultyDialogFragment dialogFragment = DifficultyDialogFragment.newInstance(DifficultyDialogFragmentType.DIFFICULTY_DIALOG_FRAGMENT_TYPE_START);
         dialogFragment.show(getFragmentManager(), "DifficultyDialogFragment");
+    }
+
+    public void setupGameHelper() {
+        gameHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
+        GameHelper.GameHelperListener listener = new GameHelper.GameHelperListener() {
+            @Override
+            public void onSignInSucceeded() {
+
+            }
+            @Override
+            public void onSignInFailed() {
+
+            }
+        };
+        gameHelper.setup(listener);
+        gameHelper.enableDebugLog(true);
     }
 
     private void showLogInView() {
@@ -168,11 +212,19 @@ public class MainActivity extends TrackedActivity implements OnDifficultySelecte
     }
 
     @Override
-    public void onDifficultySelected(DifficultyType difficultyType) {
-        Intent intent = new Intent(this, BabelActivity.class);
-        intent.putExtra("DifficultyType", difficultyType);
-        intent.putExtra("Token", token);
-        startActivity(intent);
+    public void onDifficultySelected(DifficultyType difficultyType, DifficultyDialogFragmentType difficultyDialogFragmentType) {
+        switch (difficultyDialogFragmentType) {
+            case DIFFICULTY_DIALOG_FRAGMENT_TYPE_START: {
+                Intent intent = new Intent(this, BabelActivity.class);
+                intent.putExtra("DifficultyType", difficultyType);
+                intent.putExtra("Token", token);
+                startActivity(intent);
+                break;
+            }
+            case DIFFICULTY_DIALOG_FRAGMENT_TYPE_LEADERBOARDS: {
+                startActivityForResult(Games.Leaderboards.getLeaderboardIntent(gameHelper.getApiClient(), difficultyType.toLeaderboardIdentifier()), LEADERBOARD_REQUEST_CODE);
+                break;
+            }
+        }
     }
-
 }

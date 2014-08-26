@@ -1,5 +1,6 @@
 package com.ruenzuo.babel.definitions;
 
+import com.ruenzuo.babel.models.enums.DifficultyDialogFragmentType;
 import com.ruenzuo.babel.models.enums.DifficultyType;
 
 /**
@@ -7,6 +8,6 @@ import com.ruenzuo.babel.models.enums.DifficultyType;
  */
 public interface OnDifficultySelectedListener {
 
-    public void onDifficultySelected(DifficultyType difficultyType);
+    public void onDifficultySelected(DifficultyType difficultyType, DifficultyDialogFragmentType difficultyDialogFragmentType);
 
 }
