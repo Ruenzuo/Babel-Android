@@ -25,6 +25,9 @@ import com.ruenzuo.babel.models.enums.BabelAchievementType;
 import com.ruenzuo.babel.models.enums.BabelDifficultyType;
 import com.ruenzuo.babel.models.enums.DifficultyDialogFragmentType;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
+
 import bolts.Continuation;
 import bolts.Task;
 import butterknife.ButterKnife;
@@ -55,6 +58,15 @@ public class MainActivity extends TrackedActivity implements OnDifficultySelecte
         setupGameHelper();
         ButterKnife.inject(this);
         checkTokenValidity();
+        if (!getResources().getBoolean(R.bool.google_play_build)) {
+            checkForUpdates();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkForCrashes();
     }
 
     @Override
@@ -122,19 +134,29 @@ public class MainActivity extends TrackedActivity implements OnDifficultySelecte
             }
         } else if (requestCode == GAME_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                BabelDifficultyType babelDifficultyType = (BabelDifficultyType) data.getSerializableExtra("DifficultyType");
-                int points = data.getIntExtra("Points", 0);
-                if (points != 0) {
-                    Games.Leaderboards.submitScore(gameHelper.getApiClient(), babelDifficultyType.toLeaderboardIdentifier(), points);
-                }
-                BabelAchievementType achievement = gameServicesHelper.achievementUnlocked(points, babelDifficultyType);
-                if (achievement != null) {
-                    Games.Achievements.unlock(gameHelper.getApiClient(), achievement.toAchievementIdentifier());
+                if (gameHelper.isSignedIn()) {
+                    BabelDifficultyType babelDifficultyType = (BabelDifficultyType) data.getSerializableExtra("DifficultyType");
+                    int points = data.getIntExtra("Points", 0);
+                    if (points != 0) {
+                        Games.Leaderboards.submitScore(gameHelper.getApiClient(), babelDifficultyType.toLeaderboardIdentifier(), points);
+                    }
+                    BabelAchievementType achievement = gameServicesHelper.achievementUnlocked(points, babelDifficultyType);
+                    if (achievement != null) {
+                        Games.Achievements.unlock(gameHelper.getApiClient(), achievement.toAchievementIdentifier());
+                    }
                 }
             }
         } else {
             gameHelper.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    private void checkForCrashes() {
+        CrashManager.register(this, getString(R.string.hockeyapp_id));
+    }
+
+    private void checkForUpdates() {
+        UpdateManager.register(this, getString(R.string.hockeyapp_id));
     }
 
     @OnClick(R.id.btnStart)

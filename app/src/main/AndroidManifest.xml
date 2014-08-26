@@ -3,6 +3,7 @@
     package="com.ruenzuo.babel" >
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application
         android:name=".application.BabelApplication"
         android:allowBackup="true"
@@ -37,6 +38,7 @@
                 <data android:scheme="com.ruenzuo.babel" />
             </intent-filter>
         </activity>
+        <activity android:name="net.hockeyapp.android.UpdateActivity" />
         <meta-data android:name="com.google.android.gms.games.APP_ID" android:value="@string/app_id" />
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
     </application>
