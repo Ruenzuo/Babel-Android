@@ -3,6 +3,7 @@ package com.ruenzuo.babel.activities;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -282,6 +283,10 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
             nextFile();
         } else {
             Toast.makeText(this, getFailedString(), Toast.LENGTH_LONG).show();
+            Intent intent = new Intent();
+            intent.putExtra("Points", points);
+            intent.putExtra("DifficultyType", babelManager.getDifficultyType());
+            setResult(RESULT_OK, intent);
             finish();
         }
     }

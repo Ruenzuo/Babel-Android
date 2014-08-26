@@ -115,7 +115,7 @@ public class GitHubOAuthActivity extends AnimatedActivity {
                     String token = map.get("access_token");
                     if (token != null) {
                         Intent intent = new Intent();
-                        intent.putExtra("token", token);
+                        intent.putExtra("Token", token);
                         setResult(RESULT_OK, intent);
                         return null;
                     }

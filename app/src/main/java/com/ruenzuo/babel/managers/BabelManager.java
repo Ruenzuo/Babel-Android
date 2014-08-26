@@ -61,6 +61,10 @@ public class BabelManager {
         return hintLanguages;
     }
 
+    public DifficultyType getDifficultyType() {
+        return difficultyType;
+    }
+
     private void setupLanguages(Context context) {
         String file = "";
         try {

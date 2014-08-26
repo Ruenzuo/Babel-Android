@@ -38,6 +38,7 @@ public class MainActivity extends TrackedActivity implements OnDifficultySelecte
 
     private static final int AUTHORISATION_REQUEST_CODE = 1;
     private static final int LEADERBOARD_REQUEST_CODE = 2;
+    private static final int GAME_REQUEST_CODE = 2;
     private SecureStorageHelper secureStorageHelper;
     private AuthorisationHelper authorisationHelper = new AuthorisationHelper();
     private String token;
@@ -59,8 +60,8 @@ public class MainActivity extends TrackedActivity implements OnDifficultySelecte
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
         gameHelper.onStop();
     }
 
@@ -105,9 +106,17 @@ public class MainActivity extends TrackedActivity implements OnDifficultySelecte
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == AUTHORISATION_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                token = data.getStringExtra("token");
+                token = data.getStringExtra("Token");
                 secureStorageHelper.store(token);
                 showLogOutView();
+            }
+        } else if (requestCode == GAME_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                DifficultyType difficultyType = (DifficultyType) data.getSerializableExtra("DifficultyType");
+                int points = data.getIntExtra("Points", 0);
+                if (points != 0) {
+                    Games.Leaderboards.submitScore(gameHelper.getApiClient(), difficultyType.toLeaderboardIdentifier(), points);
+                }
             }
         } else {
             gameHelper.onActivityResult(requestCode, resultCode, data);
@@ -133,7 +142,6 @@ public class MainActivity extends TrackedActivity implements OnDifficultySelecte
             }
         };
         gameHelper.setup(listener);
-        gameHelper.enableDebugLog(true);
     }
 
     private void showLogInView() {
@@ -218,7 +226,7 @@ public class MainActivity extends TrackedActivity implements OnDifficultySelecte
                 Intent intent = new Intent(this, BabelActivity.class);
                 intent.putExtra("DifficultyType", difficultyType);
                 intent.putExtra("Token", token);
-                startActivity(intent);
+                startActivityForResult(intent, GAME_REQUEST_CODE);
                 break;
             }
             case DIFFICULTY_DIALOG_FRAGMENT_TYPE_LEADERBOARDS: {
