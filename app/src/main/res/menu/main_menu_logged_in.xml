@@ -8,6 +8,8 @@
         <menu>
             <item android:id="@+id/main_menu_action_leaderboards"
                 android:title="@string/leaderboards" />
+            <item android:id="@+id/main_menu_action_achievements"
+                android:title="@string/achievements" />
             <item android:id="@+id/main_menu_action_share"
                 android:title="@string/share_this_app" />
             <item android:id="@+id/main_menu_action_about"
