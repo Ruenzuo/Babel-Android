@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "19.1"
+    compileSdkVersion 21
+    buildToolsVersion "21.0.1"
 
     defaultConfig {
         applicationId "com.ruenzuo.babel"
         minSdkVersion 14
-        targetSdkVersion 19
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0.0"
     }
@@ -40,7 +40,7 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.0.0'
     compile 'info.hoang8f:fbutton:1.0.5'
     compile 'com.google.code.gson:gson:2.3'
-    compile 'com.google.android.gms:play-services:5.0.89'
+    compile 'com.google.android.gms:play-services:6.1.11'
     compile 'net.hockeyapp.android:HockeySDK:3.0.2'
     compile project(':External:BaseGameUtils')
     compile project(':External:secure-preferences:library')
