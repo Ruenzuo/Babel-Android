@@ -2,19 +2,18 @@ package com.ruenzuo.babel.activities;
 
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import com.ruenzuo.babel.R;
 import com.ruenzuo.babel.definitions.OnGuessSelectedListener;
 import com.ruenzuo.babel.extensions.AnimatedActivity;
-import com.ruenzuo.babel.extensions.BabelSpinnerAdapter;
 import com.ruenzuo.babel.extensions.GitHubAPIRateLimitException;
 import com.ruenzuo.babel.fragments.GuessOptionsFragment;
 import com.ruenzuo.babel.fragments.SourceCodeFragment;
@@ -56,14 +55,51 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.babel_activity_layout);
-        SpinnerAdapter spinnerAdapter = new BabelSpinnerAdapter<CharSequence>(this, android.R.layout.simple_spinner_dropdown_item,BabelFragmentType.babelFragmentTypes());
-        getActionBar().setListNavigationCallbacks(spinnerAdapter, this);
+        getActionBar().addTab(getActionBar().newTab().setText("Code").setTabListener(listener));
+        getActionBar().addTab(getActionBar().newTab().setText("Guess").setTabListener(listener));
         String token = getIntent().getStringExtra("Token");
         BabelDifficultyType babelDifficultyType = (BabelDifficultyType) getIntent().getSerializableExtra("DifficultyType");
         setupManager(babelDifficultyType, token);
         setLoadingIndicators();
         nextFile();
     }
+
+    private ActionBar.TabListener listener = new ActionBar.TabListener() {
+        @Override
+        public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+            BabelFragmentType selectedBabelFragmentType = BabelFragmentType.values()[tab.getPosition()];
+            if (selectedBabelFragmentType != currentBabelFragmentType) {
+                currentBabelFragmentType = selectedBabelFragmentType;
+                switch (currentBabelFragmentType) {
+                    case BABEL_FRAGMENT_TYPE_SOURCE_CODE: {
+                        getFragmentManager().beginTransaction().replace(R.id.vwFrame, SourceCodeFragment.newInstance(currentHTMLString), "SourceCodeFragment").commit();
+                        break;
+                    }
+                    case BABEL_FRAGMENT_TYPE_GUESS_OPTIONS: {
+                        Fragment fragment;
+                        if (isHintEnabled) {
+                            fragment = GuessOptionsFragment.newInstance(babelManager.getHintLanguages());
+                        } else {
+                            fragment = GuessOptionsFragment.newInstance(babelManager.getLanguages());
+                        }
+                        getFragmentManager().beginTransaction().replace(R.id.vwFrame, fragment, "GuessOptionsFragment").commit();
+                        break;
+                    }
+                }
+                invalidateOptionsMenu();
+            }
+        }
+
+        @Override
+        public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+        }
+
+        @Override
+        public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+        }
+    };
 
     private void setLoadingIndicators() {
         switch (currentBabelFragmentType) {
@@ -83,8 +119,8 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
             }
         }
         setProgressBarIndeterminateVisibility(true);
-        getActionBar().setDisplayShowTitleEnabled(true);
         getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        getActionBar().selectTab(getActionBar().getTabAt(0));
         isLoading = true;
         invalidateOptionsMenu();
     }
@@ -152,11 +188,9 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
 
     private void loadCurrentFile() {
         setProgressBarIndeterminateVisibility(false);
-        getActionBar().setDisplayShowTitleEnabled(false);
-        getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         currentBabelFragmentType = BabelFragmentType.BABEL_FRAGMENT_TYPE_SOURCE_CODE;
         getFragmentManager().beginTransaction().replace(R.id.vwFrame, SourceCodeFragment.newInstance(currentHTMLString), "SourceCodeFragment").commit();
-        getActionBar().setSelectedNavigationItem(currentBabelFragmentType.ordinal());
         isLoading = false;
         invalidateOptionsMenu();
     }
@@ -219,29 +253,7 @@ public class BabelActivity extends AnimatedActivity implements ActionBar.OnNavig
 
     @Override
     public boolean onNavigationItemSelected(int i, long l) {
-        BabelFragmentType selectedBabelFragmentType = BabelFragmentType.values()[i];
-        if (selectedBabelFragmentType == currentBabelFragmentType) {
-            return true;
-        } else {
-            currentBabelFragmentType = selectedBabelFragmentType;
-            switch (currentBabelFragmentType) {
-                case BABEL_FRAGMENT_TYPE_SOURCE_CODE: {
-                    getFragmentManager().beginTransaction().replace(R.id.vwFrame, SourceCodeFragment.newInstance(currentHTMLString), "SourceCodeFragment").commit();
-                    break;
-                }
-                case BABEL_FRAGMENT_TYPE_GUESS_OPTIONS: {
-                    Fragment fragment;
-                    if (isHintEnabled) {
-                        fragment = GuessOptionsFragment.newInstance(babelManager.getHintLanguages());
-                    } else {
-                        fragment = GuessOptionsFragment.newInstance(babelManager.getLanguages());
-                    }
-                    getFragmentManager().beginTransaction().replace(R.id.vwFrame, fragment, "GuessOptionsFragment").commit();
-                    break;
-                }
-            }
-            invalidateOptionsMenu();
-        }
+
         return true;
     }
 
