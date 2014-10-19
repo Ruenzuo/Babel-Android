@@ -5,24 +5,27 @@ android {
     buildToolsVersion "21.0.1"
 
     defaultConfig {
-        applicationId "com.ruenzuo.babel.dev"
+        applicationId "com.ruenzuo.babel"
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 2
         versionName "1.1.0"
     }
     signingConfigs {
-        debug {
-            keyAlias = 'androiddebugkey'
-            keyPassword = 'android'
-            storeFile = file('../.signing/debug.keystore')
-            storePassword = 'android'
+        release {
+            keyAlias = 'ruenzuo'
+            keyPassword = '1337Figuratively'
+            storeFile = file('../.signing/babel.keystore')
+            storePassword = '1337Figuratively'
         }
     }
     buildTypes {
-        debug {
-            debuggable true
-            signingConfig signingConfigs.debug
+        release {
+            zipAlign true
+            debuggable false
+            signingConfig signingConfigs.release
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
     lintOptions {
