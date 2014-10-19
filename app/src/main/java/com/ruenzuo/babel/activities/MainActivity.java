@@ -25,9 +25,6 @@ import com.ruenzuo.babel.models.enums.BabelAchievementType;
 import com.ruenzuo.babel.models.enums.BabelDifficultyType;
 import com.ruenzuo.babel.models.enums.DifficultyDialogFragmentType;
 
-import net.hockeyapp.android.CrashManager;
-import net.hockeyapp.android.UpdateManager;
-
 import bolts.Continuation;
 import bolts.Task;
 import butterknife.ButterKnife;
@@ -58,15 +55,6 @@ public class MainActivity extends TrackedActivity implements OnDifficultySelecte
         setupGameHelper();
         ButterKnife.inject(this);
         checkTokenValidity();
-        if (!getResources().getBoolean(R.bool.google_play_build)) {
-            checkForUpdates();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        checkForCrashes();
     }
 
     @Override
@@ -149,14 +137,6 @@ public class MainActivity extends TrackedActivity implements OnDifficultySelecte
         } else {
             gameHelper.onActivityResult(requestCode, resultCode, data);
         }
-    }
-
-    private void checkForCrashes() {
-        CrashManager.register(this, getString(R.string.hockeyapp_id));
-    }
-
-    private void checkForUpdates() {
-        UpdateManager.register(this, getString(R.string.hockeyapp_id));
     }
 
     @OnClick(R.id.btnStart)
